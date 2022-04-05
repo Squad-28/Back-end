@@ -3,14 +3,15 @@ import Sequelize from 'sequelize';
 import config from '../config/database';
 
 import User from '../App/models/user'
+import Knowledge from '../App/models/knowledge'
+import KnowledgeList from '../App/models/knowledgeList'
 
-const models = [User];
+const models = [User, Knowledge, KnowledgeList];
 
 class Database {
   constructor() {
     this.connection = new Sequelize(config);
     this.init();
-    this.associate();
     this.authenticate();
   }
 
@@ -26,14 +27,6 @@ class Database {
 
   init() {
     models.forEach((model) => model.init(this.connection));
-  }
-
-  associate() {
-    models.forEach((model) => {
-      if (model.associate) {
-        model.associate(this.connection.models)
-      }
-    });
   }
 }
 

@@ -1,16 +1,34 @@
-import Sequelize, { Model } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 class User extends Model {
   static init(sequelize) {
     super.init({
-      /* initials: {
-
-      } */
-      name: Sequelize.STRING,
-      email: Sequelize.STRING,
-      password: Sequelize.STRING,
-      level: Sequelize.STRING,
-      description: Sequelize.STRING
+      id: {
+         type: DataTypes.UUID,
+         allowNull: false,
+         primaryKey: true,
+      },
+      name: {
+         type: DataTypes.STRING(100),
+         allowNull: false,
+      },
+      email: {
+         type: DataTypes.STRING(100),
+         allowNull: false,
+      },
+      password: {
+         type: DataTypes.STRING(255),
+         allowNull: false,
+         unique: true,
+      },
+      level: {
+         type: DataTypes.STRING(30),
+         allowNull: false,
+      },
+      description: {
+         type: DataTypes.TEXT,
+         allowNull: true,
+      },
     },
     {
       sequelize,
@@ -19,10 +37,6 @@ class User extends Model {
         plural: 'users',
       }
     });
-  }
-
-  static associations(models) {
-
   }
 }
 
