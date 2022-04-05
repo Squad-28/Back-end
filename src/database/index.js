@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Error } from 'sequelize';
 
 import config from '../config/database';
 
@@ -21,7 +21,7 @@ class Database {
       console.log('📦 Connection has been established successfully.');
 
     } catch (err) {
-      console.error('❌ Unable to connect to the database:', error);
+      console.error('❌ Unable to connect to the database:', err);
     }
   }
 
