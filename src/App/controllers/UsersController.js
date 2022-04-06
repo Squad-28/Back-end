@@ -7,7 +7,9 @@ class UsersController {
       const users = await User.findAll();
 
       if (users < 1) {
-        return res.status(200).json({ message: 'There are no registered users.' });
+        return res
+          .status(200)
+          .json({ message: 'There are no registered users.' });
       }
 
       return res.json(users);
@@ -43,10 +45,11 @@ class UsersController {
       const { name, email, password, level, description } = req.body;
 
       const user = await User.findOne({ where: { email }});
-      console.log(user)
 
       if (user) {
-        return res.status(422).json({ messege: `User ${email} already exists.` });
+        return res
+          .status(422)
+          .json({ messege: `User ${email} already exists.` });
       }
 
       // const encryptedPassword = await createPasswordHash(password);
@@ -88,28 +91,7 @@ class UsersController {
         password,
         level,
         description
-      })
-
-      return res.status(200).json();
-      
-    } catch (err) {
-      console.error(err);
-
-      return res.status(500).json({ error: 'Internal server error.' });
-    }
-  }
-
-  async destroy(req, res) {
-    try {
-      const { id } = req.params;
-
-      const user = await User.findByPk(id);
-
-      if (!user) {
-        return res.status(404).json();
-      }
-
-      await user.destroy({ where: { id } });
+      });
 
       return res.status(200).json();
       
