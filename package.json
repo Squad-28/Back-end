@@ -8,6 +8,13 @@
     "db:migrate": "sequelize-cli db:migrate",
     "db:undo": "sequelize-cli db:migrate:undo"
   },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -16,7 +23,8 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.18.0"
+    "sequelize": "^6.18.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-alpha.7",

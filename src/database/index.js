@@ -1,10 +1,10 @@
-import Sequelize, { Error } from 'sequelize';
+import Sequelize from 'sequelize';
 
 import config from '../config/database';
 
-import User from '../App/models/user'
-import Knowledge from '../App/models/knowledge'
-import KnowledgeList from '../App/models/knowledgeList'
+import User from '../App/models/user';
+import Knowledge from '../App/models/knowledge';
+import KnowledgeList from '../App/models/knowledgeList';
 
 const models = [User, Knowledge, KnowledgeList];
 
@@ -19,7 +19,6 @@ class Database {
     try {
       await this.connection.authenticate();
       console.log('📦 Connection has been established successfully.');
-
     } catch (err) {
       console.error('❌ Unable to connect to the database:', err);
     }

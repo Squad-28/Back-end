@@ -10,5 +10,5 @@ module.exports = {
     timestamp: true,
     underscored: true,
     underscoredAll: true,
-  }
+  },
 };
