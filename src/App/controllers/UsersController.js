@@ -13,7 +13,6 @@ class UsersController {
       }
 
       return res.json(users);
-
     } catch (err) {
       console.error(err);
 
@@ -32,7 +31,6 @@ class UsersController {
       }
 
       return res.json(user);
-      
     } catch (err) {
       console.error(err);
 
@@ -44,7 +42,7 @@ class UsersController {
     try {
       const { name, email, password, level, description } = req.body;
 
-      const user = await User.findOne({ where: { email }});
+      const user = await User.findOne({ where: { email } });
 
       if (user) {
         return res
@@ -64,7 +62,6 @@ class UsersController {
       });
 
       return res.status(201).json(newUser);
-      
     } catch (err) {
       console.error(err);
 
@@ -90,11 +87,10 @@ class UsersController {
         email,
         password,
         level,
-        description
+        description,
       });
 
       return res.status(200).json();
-      
     } catch (err) {
       console.error(err);
 

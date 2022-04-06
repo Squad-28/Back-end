@@ -9,9 +9,9 @@ services:
     env_file:
       - ./.env
     volumes:
-      - "./:/app"
+      - './:/app'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mysql
 
@@ -20,14 +20,14 @@ services:
     container_name: mysql
     restart: always
     ports:
-      - "6033:3306"
+      - '6033:3306'
     volumes:
-      - "v_mysql:/var/lib/mysql"
+      - 'v_mysql:/var/lib/mysql'
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_USER: "dev"
-      MYSQL_PASSWORD: "dev"
-      MYSQL_DATABASE: "squad_28_technical_share"
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_USER: 'dev'
+      MYSQL_PASSWORD: 'dev'
+      MYSQL_DATABASE: 'squad_28_technical_share'
 
 networks:
   default:

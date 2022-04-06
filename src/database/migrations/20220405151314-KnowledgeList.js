@@ -5,11 +5,11 @@ module.exports = {
     await queryInterface.createTable('knowledge_list', {
       id_user: {
         type: Sequelize.DataTypes.UUID,
-        allowNull: false
+        allowNull: false,
       },
       id_knowledge: {
         type: Sequelize.DataTypes.UUID,
-        allowNull: false
+        allowNull: false,
       },
       knowledge_level: {
         type: Sequelize.DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
@@ -20,5 +20,5 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('knowledge_list');
-  }
+  },
 };

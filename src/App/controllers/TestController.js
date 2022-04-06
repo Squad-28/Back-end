@@ -12,7 +12,6 @@ class TestController {
       }
 
       return res.json(users);
-
     } catch (err) {
       console.error(err);
 
