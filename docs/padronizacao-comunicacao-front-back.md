@@ -231,7 +231,7 @@ BACKEND:
 2. Cadastro
 	- mostra os campos de cadastro ([descrito aqui](#post-user))
 3. Usuario
-	- mostra os campos do usuario cadastrado e da a opcao de editar ([descrito aqui](#put-userid))
+	- mostra os campos do usuario cadastrado e da a opcão de editar ([descrito aqui](#put-userid))
 
 
 
