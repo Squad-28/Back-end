@@ -1,23 +1,17 @@
-import User from '../models/User';
+import { services } from '../services/Teste.service';
 
-class TestController {
-  async index(req, res) {
-    try {
-      const users = await User.findAll();
+async function findAll(req, res) {
+  try {
+    const result = await services.findAll();
 
-      if (users < 1) {
-        return res
-          .status(200)
-          .json({ message: 'There are no registered users.' });
-      }
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
 
-      return res.json(users);
-    } catch (err) {
-      console.error(err);
-
-      return res.status(500).json({ error: 'Internal server error.' });
-    }
+    res.status(err.statusCode).json({ error: err.description });
   }
 }
 
-export default new TestController();
+export const testeController = {
+  findAll,
+};
