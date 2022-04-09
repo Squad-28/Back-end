@@ -18,11 +18,8 @@ class KnowledgeList extends Model {
         },
       },
       {
+        tableName: 'knowledge_list',
         sequelize,
-        name: {
-          singular: 'knowledge_list',
-          plural: 'knowledge_list',
-        },
       }
     );
   }
