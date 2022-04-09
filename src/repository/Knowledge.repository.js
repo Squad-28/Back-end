@@ -9,6 +9,23 @@ const formatReturn = (result) => {
 };
 
 class KnowledgeRepository {
+  async findAll() {
+    try {
+      const result = await Knowledge.findAll();
+
+      const arrrayEmpty = result.length <= 0;
+      if (arrrayEmpty) return result;
+
+      const knowledges = result.map(formatReturn);
+
+      // console.log('knowledges: ', knowledges);
+
+      return knowledges;
+    } catch (error) {
+      console.log('[ERRO NO BD, FIND ALL]: ' + error);
+    }
+  }
+
   async bulkCreate(knowledges, transaction = null) {
     try {
       await Knowledge.bulkCreate(knowledges, {
