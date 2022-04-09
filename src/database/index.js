@@ -11,11 +11,14 @@ const models = [User, Knowledge, KnowledgeList];
 class Database {
   constructor() {
     this.connection = new Sequelize(config);
-    this.init();
-    this.authenticate();
   }
 
-  async authenticate() {
+  async start() {
+    this.#initModels();
+    this.#authenticate();
+  }
+
+  async #authenticate() {
     try {
       await this.connection.authenticate();
       console.log('📦 Connection has been established successfully.');
@@ -24,7 +27,7 @@ class Database {
     }
   }
 
-  init() {
+  #initModels() {
     models.forEach((model) => model.init(this.connection));
   }
 
