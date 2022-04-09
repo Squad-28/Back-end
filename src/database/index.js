@@ -2,9 +2,9 @@ import Sequelize from 'sequelize';
 
 import config from '../config/database';
 
-import User from '../App/models/user';
-import Knowledge from '../App/models/knowledge';
-import KnowledgeList from '../App/models/knowledgeList';
+import User from '../models/User';
+import Knowledge from '../models/Knowledge';
+import KnowledgeList from '../models/KnowledgeList';
 
 const models = [User, Knowledge, KnowledgeList];
 
@@ -26,6 +26,10 @@ class Database {
 
   init() {
     models.forEach((model) => model.init(this.connection));
+  }
+
+  getConnection() {
+    return this.connection;
   }
 }
 

@@ -5,5 +5,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 config/config.json
-old-repo
+old-*
 docs/ideias.md

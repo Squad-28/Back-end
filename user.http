@@ -1,0 +1,24 @@
+GET http://localhost:3333/users HTTP/1.1
+
+###
+
+POST http://localhost:3333/users HTTP/1.1
+content-type: application/json
+
+{
+	"user": {
+		"name": "",
+		"email": "",
+		"password": "",
+		"description": "",
+		"contact": "",
+		"level": "",
+		"knowledge": [
+			{ "name": "nodejs", "score": 5 },
+			{ "name": "reactjs", "score": 4 },
+			{ "name": "backend", "score": 3 },
+			{ "name": "sql", "score": 2 },
+			{ "name": "mysql", "score": 1 }
+		]
+	}
+}

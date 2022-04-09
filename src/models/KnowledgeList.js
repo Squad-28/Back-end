@@ -13,7 +13,7 @@ class KnowledgeList extends Model {
           allowNull: false,
         },
         knowledge_level: {
-          type: DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
+          type: DataTypes.INTEGER(1),
           allowNull: false,
         },
       },
