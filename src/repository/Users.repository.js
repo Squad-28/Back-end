@@ -8,6 +8,26 @@ const formatReturn = (result) => {
 };
 
 class UsersRepository {
+  async findAll() {
+    try {
+      const result = await User.findAll();
+
+      const arrrayEmpty = result.length <= 0;
+      if (arrrayEmpty) return result;
+
+      const users = result.map(formatReturn);
+
+      // console.log('users: ', users);
+
+      return users;
+    } catch (error) {
+      console.log('[ERRO NO BD, FIND ALL]: ' + error);
+    }
+  }
+
+  // async findUserByIdWithKnowledges(){}
+  // async findAllUserWithKnowledges(){}
+
   async create(user, transaction = null) {
     try {
       const instance = new User(user);
