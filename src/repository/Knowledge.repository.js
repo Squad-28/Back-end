@@ -26,6 +26,13 @@ class KnowledgeRepository {
     }
   }
 
+  async findByName(names) {
+    const conn = database.getConnection();
+    const query = `SELECT id, name FROM Knowledges WHERE name IN (${names});`;
+    const result = await conn.query(query);
+    console.log(result);
+  }
+
   async bulkCreate(knowledges, transaction = null) {
     try {
       await Knowledge.bulkCreate(knowledges, {
