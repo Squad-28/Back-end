@@ -32,11 +32,8 @@ class User extends Model {
         },
       },
       {
+        tableName: 'users',
         sequelize,
-        name: {
-          singular: 'user',
-          plural: 'users',
-        },
       }
     );
   }
