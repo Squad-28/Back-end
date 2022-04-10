@@ -170,7 +170,7 @@ REQUEST:
 BACKEND:
 
 - verificar se email já existe e que não seja do proprio usuario.
-- verificar se os campos obrigatórios não est.ão vazios 
+- verificar se os campos obrigatórios não estão vazios
 
 ## PUT /user/:id/knowledge
 
@@ -225,13 +225,13 @@ BACKEND:
 
 ## Telas
 
-1. Home 
+1. Home
 	- mostra todos os usuarios ([descrito aqui](#get-users));
 	- tem barra de filtro por conhecimento, conforme a pessoa escreve o conhecimento, busca e mostra só os usuarios que tem esse conhecimento ([descrito aqui](#filtro-por-conhecimento));
 2. Cadastro
 	- mostra os campos de cadastro ([descrito aqui](#post-user))
-3. Usuario 
-	- mostra os campos do usuario cadastrado e da a opcao de editar ([descrito aqui](#put-userid))
+3. Usuario
+	- mostra os campos do usuario cadastrado e da a opcão de editar ([descrito aqui](#put-userid))
 
 
 

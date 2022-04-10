@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
-import TestController from './controllers/Test.controller';
-import UsersController from './controllers/Users.controller';
+import TestController from '../controllers/Test.controller';
+import UsersController from '../controllers/Users.controller';
 
 const routes = new Router();
 
 // test route
-routes.get('/test', TestController.index);
+routes.get('/test', TestController.findAll);
 
 // app routes
 routes.get('/users', UsersController.index);

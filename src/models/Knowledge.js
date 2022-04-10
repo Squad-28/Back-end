@@ -15,11 +15,8 @@ class Knowledge extends Model {
         },
       },
       {
+        tableName: 'knowledges',
         sequelize,
-        name: {
-          singular: 'knowledge',
-          plural: 'knowledges',
-        },
       }
     );
   }

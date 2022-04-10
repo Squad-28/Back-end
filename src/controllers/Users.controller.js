@@ -40,7 +40,20 @@ class UsersController {
     }
   }
 
-  async create(req, res) {}
+  async create(req, res) {
+    const user = userFactory()[0];
+    // const { user } = req.body;
+
+    try {
+      const newUser = await service.create(user);
+
+      return res.status(201).json(newUser);
+    } catch (err) {
+      console.error(err);
+
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
 
   async update(req, res) {
     try {
