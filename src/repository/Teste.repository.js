@@ -1,18 +1,17 @@
 import User from '../models/User';
 
-async function findAll() {
-  const results = User.findAll();
+class TesteRepository {
+  async findAll() {
+    const results = User.findAll();
 
-  return results;
+    return results;
+  }
+
+  async hasExistsUsers() {
+    const hasUser = User.findAll();
+
+    return hasUser;
+  }
 }
 
-async function hasExistsUsers() {
-  const hasUser = User.findAll();
-
-  return hasUser;
-}
-
-export const testeRespositories = {
-  findAll,
-  hasExistsUsers
-}
+export default new TesteRepository();

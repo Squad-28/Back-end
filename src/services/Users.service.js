@@ -3,9 +3,8 @@ import KnowledgeRepo from '../repository/Knowledge.repository';
 import KnowledgeListRepo from '../repository/KnowledgeList.repository';
 import Database from '../database';
 import { v4 as uuidv4 } from 'uuid';
-import { formatNamedParameters } from 'sequelize/types/utils';
 
-import HTTP500Error from '../errors/httpErros/HTTP500Error';
+import HTTP500Error from '../errors/httpErrors/HTTP500Error';
 import { BcryptEncryptionHelper } from '../helpers/security/BcryptEncryptionHelper';
 
 import dontenv from 'dotenv';
