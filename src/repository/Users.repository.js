@@ -1,5 +1,3 @@
-import User from '../models/User';
-
 const formatReturn = (result) => {
   const data = result.dataValues;
   delete data?.createdAt;
@@ -8,20 +6,30 @@ const formatReturn = (result) => {
 };
 
 class UsersRepository {
-  async findAll() {
-    try {
-      const result = await User.findAll();
+  #User;
+  #sequelize;
+  constructor(User, sequelize) {
+    this.#User = User;
+    this.#sequelize = sequelize;
+  }
 
-      const arrrayEmpty = result.length <= 0;
+  async index() {
+    try {
+      const query = `
+        SELECT 
+          u.id, u.name, u.email, u.description, u.level, k.name as knowledge_name, kl.score as knowledge_score
+        FROM knowledge_list kl 
+        JOIN users u ON kl.id_user = u.id 
+        JOIN knowledges k ON kl.id_knowledge = k.id;`;
+
+      const result = await this.#sequelize.query(query);
+
+      const arrrayEmpty = result?.length <= 0;
       if (arrrayEmpty) return result;
 
-      const users = result.map(formatReturn);
-
-      // console.log('users: ', users);
-
-      return users;
+      return result[0];
     } catch (error) {
-      console.log('[ERRO NO BD, FIND ALL]: ' + error);
+      console.error('[ERRO NO BD, FIND ALL]: ' + error);
     }
   }
 
@@ -30,18 +38,16 @@ class UsersRepository {
 
   async create(user, transaction = null) {
     try {
-      const instance = new User(user);
+      const instance = new this.#User(user);
       let userSaved = await instance.save({ transaction });
 
       userSaved = formatReturn(userSaved);
 
-      // console.log('user: ', userSaved);
-
       return userSaved;
     } catch (error) {
-      console.log('[ERRO NO BD, CREATE]: ' + error);
+      console.error('[ERRO NO BD, CREATE]: ' + error);
     }
   }
 }
 
-export default new UsersRepository();
+export default UsersRepository;
