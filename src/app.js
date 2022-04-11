@@ -1,27 +1,33 @@
 import express from 'express';
 import cors from 'cors';
 import routes from './routes';
-import database from './database';
-
-(async () => {
-  await database.start();
-})();
 
 class App {
-  constructor() {
-    this.server = express();
-    this.middlewares();
-    this.routes();
+  #server;
+
+  constructor(database) {
+    this.#startDatabase(database);
+    this.#server = express();
+    this.#middlewares();
+    this.#routes();
   }
 
-  middlewares() {
-    this.server.use(express.json());
-    this.server.use(cors());
+  #middlewares() {
+    this.#server.use(express.json());
+    this.#server.use(cors());
   }
 
-  routes() {
-    this.server.use(routes);
+  #routes() {
+    this.#server.use(routes);
+  }
+
+  getServer() {
+    return this.#server;
+  }
+
+  async #startDatabase(database) {
+    await database.start();
   }
 }
 
-export default new App().server;
+export default App;
