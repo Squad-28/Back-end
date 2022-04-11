@@ -6,34 +6,46 @@ import User from '../models/User';
 import Knowledge from '../models/Knowledge';
 import KnowledgeList from '../models/KnowledgeList';
 
-const models = [User, Knowledge, KnowledgeList];
-
 class Database {
+  #sequelize;
+  #models;
+
   constructor() {
-    this.connection = new Sequelize(config);
+    this.#sequelize = new Sequelize(config);
+    this.#models = [User, Knowledge, KnowledgeList];
   }
 
   async start() {
     this.#initModels();
-    this.#authenticate();
+    await this.#authenticate();
+    return this.#sequelize;
+  }
+
+  async close() {
+    await this.#sequelize.close();
   }
 
   async #authenticate() {
     try {
-      await this.connection.authenticate();
+      await this.#sequelize.sync();
+      await this.#sequelize.authenticate();
       console.log('📦 Connection has been established successfully.');
-    } catch (err) {
-      console.error('❌ Unable to connect to the database:', err);
+    } catch (error) {
+      console.error('❌ Unable to connect to the database:', error);
     }
   }
 
   #initModels() {
-    models.forEach((model) => model.init(this.connection));
+    this.#models.forEach((model) => model.init(this.#sequelize));
   }
 
   getConnection() {
-    return this.connection;
+    return this.#sequelize;
+  }
+
+  getModels() {
+    return this.#models;
   }
 }
 
-export default new Database();
+export default Database;

@@ -1,7 +1,3 @@
-import UserRepo from '../repository/Users.repository';
-import KnowledgeRepo from '../repository/Knowledge.repository';
-import KnowledgeListRepo from '../repository/KnowledgeList.repository';
-import Database from '../database';
 import { v4 as uuidv4 } from 'uuid';
 
 import HTTP500Error from '../errors/httpErrors/HTTP500Error';
@@ -10,117 +6,103 @@ import { BcryptEncryptionHelper } from '../helpers/security/BcryptEncryptionHelp
 import dontenv from 'dotenv';
 dontenv.config();
 
-const sequelize = Database.getConnection();
-
 class UsersService {
+  #sequelize;
+  #usersRepo;
+  #knowledgeRepo;
+  #knowledgeListRepo;
+
+  constructor(sequelize, usersRepo, knowledgeRepo, knowledgeListRepo) {
+    this.#sequelize = sequelize;
+    this.#usersRepo = usersRepo;
+    this.#knowledgeRepo = knowledgeRepo;
+    this.#knowledgeListRepo = knowledgeListRepo;
+  }
+
   async create(user) {
     user.id = uuidv4();
 
-    console.log(user);
     let knowledges = user?.knowledge;
     delete user?.knowledge;
 
-    return;
+    const formatedKnowledges = this.#formatKnowledges(knowledges);
+    // console.log('formatedKnowledges', formatedKnowledges);
 
-    //array nao cadastrado, Knowledge ()
-    //array nao cadastrado e cadastrado, KnowledgeList ()
-    knowledges = await this.#checkIfKnowledgesExistsInDatabase(knowledges);
-    return {
-      knowledge: [],
-      knowledgeList: [],
-    };
+    const existingKnowledges = await this.#getKnowledgesExistingInDatabase(
+      formatedKnowledges
+    );
+    // console.log('existingKnowledges', existingKnowledges);
 
-    const transaction = await sequelize.transaction();
+    const arraysToInsertInTables = this.#createArraysToInsertInTables(
+      user,
+      formatedKnowledges,
+      existingKnowledges
+    );
+    // console.log('arraysToInsertInTables', arraysToInsertInTables);
+
+    const transaction = await this.#sequelize.transaction();
 
     try {
-      await UserRepo.create(user, transaction);
-      await this.#insertOrNotKnowledgeInDatabase(knowledges, transaction);
-      // await this.#insertOrNotKnowledgeListInDatabase(
-      //   user,
-      //   knowledges,
-      //   scores,
-      //   transaction
-      // );
+      const { toInsertInKnowledgeTable, toInsertInKnowledgeListTable } =
+        arraysToInsertInTables;
+
+      await this.#usersRepo.create(user, transaction);
+
+      await this.#insertOrNotKnowledgeInDatabase(
+        toInsertInKnowledgeTable,
+        transaction
+      );
+
+      await this.#insertOrNotKnowledgeListInDatabase(
+        toInsertInKnowledgeListTable,
+        transaction
+      );
+
       // throw new Error();
       await transaction.commit();
     } catch (error) {
+      console.error(error);
       await transaction.rollback();
+      throw error;
     }
-    console.log((await UserRepo.findAll())?.length);
-    console.log((await KnowledgeRepo.findAll())?.length);
+  }
+
+  #formatKnowledges(knowledges = []) {
+    if (this.#knowledgesIsEmpty(knowledges)) return [];
+
+    return knowledges.map((knowledge) => {
+      knowledge.name = knowledge.name.toUpperCase();
+      knowledge.id = uuidv4();
+      return knowledge;
+    });
   }
 
   async #insertOrNotKnowledgeInDatabase(knowledges, transaction) {
-    const knowledgeEmpty = knowledges?.length <= 0;
-    if (knowledgeEmpty) return;
+    if (this.#knowledgesIsEmpty(knowledges)) return [];
 
-    await KnowledgeRepo.bulkCreate(knowledges, transaction);
-    // await KnowledgeListDAO.createAll(user, inexistentKnowledge);
+    return await this.#knowledgeRepo.bulkCreate(knowledges, transaction);
   }
 
-  async #checkIfKnowledgesExistsInDatabase(knowledges) {
-    const knowledgeEmpty = knowledges?.length <= 0;
-    if (knowledgeEmpty) return;
+  async #insertOrNotKnowledgeListInDatabase(knowledgesList, transaction) {
+    if (this.#knowledgesIsEmpty(knowledgesList)) return [];
 
-    const formatedKnowledges = this.#formatKnowledges(knowledges);
-
-    const inexistentKnowledge = await this.#getKnowledgeNotExistingInDatabase(
-      formatedKnowledges
+    return await this.#knowledgeListRepo.bulkCreate(
+      knowledgesList,
+      transaction
     );
-
-    return inexistentKnowledge;
   }
 
-  async #getKnowledgeNotExistingInDatabase(knowledges) {
+  async #getKnowledgesExistingInDatabase(knowledges = []) {
+    if (this.#knowledgesIsEmpty(knowledges)) return [];
+
     const names = this.#createSingleStringWithKnowledgeNames(knowledges);
 
-    const existingKnowledges = await KnowledgeRepo.findByName(names);
+    const existingKnowledges = await this.#knowledgeRepo.findByName(names);
 
-    const arrayEmpty = existingKnowledges.length <= 0;
-
-    if (arrayEmpty)
-      return this.#generateArraysToInsertIntoDatabase(user, knowledges);
-
-    //se nao existe, retorna o antigo pro Know, pro KnowList gera
-    //se existir, adiciona so os q n existe no Know, junta existente e nao existent pro KnowList
-
-    //filtra os que tem nome diferente e adiciona no bd Knowledge
-    //cria array com todos os ids e scores para KnowledgeList
-
-    return this.#generateArraysToInsertIntoDatabase(
-      user,
-      knowledges,
-      existingKnowledges
-    );
+    return existingKnowledges;
   }
 
-  #generateArraysToInsertIntoDatabase(
-    user,
-    knowledges,
-    existingKnowledges = []
-  ) {
-    const toInsertInKnowledgeListTable = knowledges.map((knowledge) => {
-      return {
-        id_user: user.id,
-        id_knowledge: knowledge.id,
-        score: knowledge.score,
-      };
-    });
-
-    const toInsertInKnowledgeTable = knowledges.map((knowledge) => {
-      return {
-        id: knowledge.id,
-        name: knowledge.name,
-      };
-    });
-
-    return {
-      toInsertInKnowledgeTable,
-      toInsertInKnowledgeListTable,
-    };
-  }
-
-  #createSingleStringWithKnowledgeNames(knowledges) {
+  #createSingleStringWithKnowledgeNames(knowledges = []) {
     let thisIsTheLastIndex = false;
     let arrayLength = knowledges.length;
 
@@ -138,17 +120,83 @@ class UsersService {
     return names;
   }
 
-  #formatKnowledges(knowledges) {
-    const scores = [];
-    return knowledges.map((knowledge) => {
-      knowledge.name = knowledge.name.toUpperCase();
-      knowledge.id = uuidv4();
-      scores.push(knowledge.score);
-      delete knowledge.score;
+  #createArraysToInsertInTables(user, knowledges, existingKnowledges = []) {
+    const existKnowledgeInDatabase = existingKnowledges?.length <= 0;
 
-      return knowledge;
+    if (existKnowledgeInDatabase)
+      return this.#createArraysIfKnowledgeIsNotRegistered(user, knowledges);
+
+    return this.#createArraysIfKnowledgeIsAlreadyRegistered(
+      user,
+      knowledges,
+      existingKnowledges
+    );
+  }
+
+  #createArraysIfKnowledgeIsNotRegistered(user, knowledges = []) {
+    const toInsertInKnowledgeListTable = [];
+    const toInsertInKnowledgeTable = [];
+
+    knowledges.forEach((knowledge) => {
+      toInsertInKnowledgeListTable.push({
+        id_user: user.id,
+        id_knowledge: knowledge.id,
+        score: knowledge.score,
+      });
+
+      toInsertInKnowledgeTable.push({
+        id: knowledge.id,
+        name: knowledge.name,
+      });
     });
+
+    return {
+      toInsertInKnowledgeTable,
+      toInsertInKnowledgeListTable,
+    };
+  }
+
+  #createArraysIfKnowledgeIsAlreadyRegistered(
+    user,
+    knowledges = [],
+    existingKnowledges = []
+  ) {
+    let toInsertInKnowledgeTable = JSON.parse(JSON.stringify(knowledges));
+    let toInsertInKnowledgeListTable = [];
+
+    existingKnowledges.forEach((existing) => {
+      toInsertInKnowledgeTable = toInsertInKnowledgeTable.filter(
+        (toInsert) => toInsert.name !== existing.name
+      );
+    });
+
+    const knowledgesWithRightId = [
+      ...toInsertInKnowledgeTable,
+      ...existingKnowledges,
+    ];
+
+    let knowledgeFound;
+    toInsertInKnowledgeListTable = knowledges.map((oldKnowledge) => {
+      knowledgeFound = knowledgesWithRightId.find(
+        (newKnowledge) => newKnowledge.name === oldKnowledge.name
+      );
+
+      return {
+        id_user: user.id,
+        id_knowledge: knowledgeFound.id,
+        score: oldKnowledge.score,
+      };
+    });
+
+    return {
+      toInsertInKnowledgeTable,
+      toInsertInKnowledgeListTable,
+    };
+  }
+
+  #knowledgesIsEmpty(knowledges) {
+    return knowledges?.length <= 0;
   }
 }
 
-export default new UsersService();
+export default UsersService;

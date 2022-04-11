@@ -6,12 +6,22 @@ module.exports = {
       id_user: {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
+        primaryKey: true,
+        references: {
+          key: 'id',
+          model: 'users',
+        },
       },
       id_knowledge: {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
+        primaryKey: true,
+        references: {
+          key: 'id',
+          model: 'knowledges',
+        },
       },
-      knowledge_level: {
+      score: {
         type: Sequelize.DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
         allowNull: false,
       },

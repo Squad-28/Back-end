@@ -1,6 +1,3 @@
-import database from '../database';
-import Knowledge from '../models/Knowledge';
-
 const formatReturn = (result) => {
   const data = result.dataValues;
   delete data?.createdAt;
@@ -9,39 +6,47 @@ const formatReturn = (result) => {
 };
 
 class KnowledgeRepository {
-  async findAll() {
+  #Knowledge;
+  #sequelize;
+  constructor(Knowledge, sequelize) {
+    this.#Knowledge = Knowledge;
+    this.#sequelize = sequelize;
+  }
+
+  async index() {
     try {
-      const result = await Knowledge.findAll();
+      const result = await this.#Knowledge.findAll();
 
       const arrrayEmpty = result.length <= 0;
       if (arrrayEmpty) return result;
 
       const knowledges = result.map(formatReturn);
 
-      // console.log('knowledges: ', knowledges);
-
       return knowledges;
     } catch (error) {
-      console.log('[ERRO NO BD, FIND ALL]: ' + error);
+      console.error('[ERRO NO BD, FIND ALL]: ' + error);
     }
   }
 
   async findByName(names) {
-    const conn = database.getConnection();
-    const query = `SELECT id, name FROM Knowledges WHERE name IN (${names});`;
-    const result = await conn.query(query);
-    console.log(result);
+    try {
+      const query = `SELECT id, name FROM knowledges WHERE name IN (${names});`;
+      const result = await this.#sequelize.query(query);
+      return result;
+    } catch (error) {
+      console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+    }
   }
 
   async bulkCreate(knowledges, transaction = null) {
     try {
-      await Knowledge.bulkCreate(knowledges, {
+      return await this.#Knowledge.bulkCreate(knowledges, {
         transaction,
       });
     } catch (error) {
-      console.log('[ERRO NO BD, BULK CREATE]: ' + error);
+      console.error('[ERRO NO BD, BULK CREATE]: ' + error);
     }
   }
 }
 
-export default new KnowledgeRepository();
+export default KnowledgeRepository;

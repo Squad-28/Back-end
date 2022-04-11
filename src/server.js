@@ -1,5 +1,18 @@
-import app from './app';
+import App from './app';
+import Database from './database';
 
-app.listen(3333, () =>
-  console.log('🚀 Server started at http://localhost:3333')
-);
+const database = new Database();
+const app = new App(database);
+
+(async () => {
+  try {
+    app
+      .getServer()
+      .listen(3333, () =>
+        console.log('🚀 Server started at http://localhost:3333')
+      );
+  } catch (error) {
+    await database.close();
+    console.error(error);
+  }
+})();
