@@ -7,18 +7,29 @@ class KnowledgeList extends Model {
         id_user: {
           type: DataTypes.UUID,
           allowNull: false,
+          primaryKey: true,
+          references: {
+            key: 'id',
+            model: 'users',
+          },
         },
         id_knowledge: {
           type: DataTypes.UUID,
           allowNull: false,
+          primaryKey: true,
+          references: {
+            key: 'id',
+            model: 'knowledges',
+          },
         },
-        knowledge_level: {
-          type: DataTypes.INTEGER(1),
+        score: {
+          type: DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
           allowNull: false,
         },
       },
       {
         tableName: 'knowledge_list',
+        timestamps: false,
         sequelize,
       }
     );
