@@ -29,10 +29,13 @@ class KnowledgeRepository {
   }
 
   async findByName(names) {
-    const conn = database.getConnection();
-    const query = `SELECT id, name FROM Knowledges WHERE name IN (${names});`;
-    const result = await conn.query(query);
-    console.log(result);
+    try {
+      const query = `SELECT id, name FROM knowledges WHERE name IN (${names});`;
+      const result = await this.#sequelize.query(query);
+      return result;
+    } catch (error) {
+      console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+    }
   }
 
   async bulkCreate(knowledges, transaction = null) {
