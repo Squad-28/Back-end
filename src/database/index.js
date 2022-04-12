@@ -12,7 +12,7 @@ class Database {
 
   constructor() {
     this.#sequelize = new Sequelize(config);
-    this.#models = [User, Knowledge, KnowledgeList];
+    this.#models = [KnowledgeList, User, Knowledge];
   }
 
   async start() {
