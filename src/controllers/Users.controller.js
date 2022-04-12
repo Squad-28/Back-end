@@ -1,5 +1,4 @@
 import userFactory from '../utils/userFactory';
-import UsersService from '../services/Users.service';
 
 import User from '../models/User';
 import Knowledge from '../models/Knowledge';
@@ -9,11 +8,14 @@ import Database from '../database';
 import UsersRepository from '../repository/Users.repository';
 import KnowledgeRepository from '../repository/Knowledge.repository';
 import KnowledgeListRepository from '../repository/KnowledgeList.repository';
+import IndexUsersService from '../services/users/IndexUsersService';
+import CreateUsersService from '../services/users/CreateUsersService';
 
 class UsersController {
-  getUsersService() {
+  getCreateUsersService() {
     const sequelize = new Database().getConnection();
-    return new UsersService(
+
+    return new CreateUsersService(
       sequelize,
       new UsersRepository(User),
       new KnowledgeRepository(Knowledge, sequelize),
@@ -22,18 +24,21 @@ class UsersController {
   }
 
   async create(req, res) {
-    // const user = userFactory()[0];
-    const { user } = req.body;
+    const user = userFactory()[0];
+    // const { user } = req.body;
 
     try {
       const sequelize = new Database().getConnection();
-      const userService = new UsersService(
+      const createUsersService = new CreateUsersService(
         sequelize,
         new UsersRepository(User),
         new KnowledgeRepository(Knowledge, sequelize),
         new KnowledgeListRepository(KnowledgeList)
       );
-      const newUser = await userService.create(user);
+      const newUser = await createUsersService.create(user);
+
+      const service = this.getCreateUsersService();
+      await service.create(user);
 
       return res.status(201).json(newUser);
     } catch (error) {
