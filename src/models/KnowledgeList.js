@@ -1,7 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
+import 'dotenv/config';
 
 class KnowledgeList extends Model {
   static init(sequelize) {
+    const isTestEnv = process.env.NODE_ENV === 'test';
+
+    const scoreType = isTestEnv
+      ? DataTypes.INTEGER(1)
+      : DataTypes.INTEGER(1).UNSIGNED.ZEROFILL;
+
     super.init(
       {
         id_user: {
@@ -23,7 +30,7 @@ class KnowledgeList extends Model {
           },
         },
         score: {
-          type: DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
+          type: scoreType,
           allowNull: false,
         },
       },
