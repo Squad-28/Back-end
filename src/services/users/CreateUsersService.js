@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import HTTP500Error from '../errors/httpErrors/HTTP500Error';
-import { BcryptEncryptionHelper } from '../helpers/security/BcryptEncryptionHelper';
+import HTTP500Error from '../../errors/httpErrors/HTTP500Error';
+import { BcryptEncryptionHelper } from '../../helpers/security/BcryptEncryptionHelper';
 
 import dontenv from 'dotenv';
+
 dontenv.config();
 
-class UsersService {
+class CreateUsersService {
   #sequelize;
   #usersRepo;
   #knowledgeRepo;
@@ -21,6 +22,9 @@ class UsersService {
 
   async create(user) {
     user.id = uuidv4();
+
+    console.log(user);
+    return;
 
     let knowledges = user?.knowledge;
     delete user?.knowledge;
@@ -68,7 +72,7 @@ class UsersService {
   }
 
   #formatKnowledges(knowledges = []) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     return knowledges.map((knowledge) => {
       knowledge.name = knowledge.name.toUpperCase();
@@ -78,13 +82,13 @@ class UsersService {
   }
 
   async #insertOrNotKnowledgeInDatabase(knowledges, transaction) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     return await this.#knowledgeRepo.bulkCreate(knowledges, transaction);
   }
 
   async #insertOrNotKnowledgeListInDatabase(knowledgesList, transaction) {
-    if (this.#knowledgesIsEmpty(knowledgesList)) return [];
+    if (this.#arrayIsEmpty(knowledgesList)) return [];
 
     return await this.#knowledgeListRepo.bulkCreate(
       knowledgesList,
@@ -93,7 +97,7 @@ class UsersService {
   }
 
   async #getKnowledgesExistingInDatabase(knowledges = []) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     const names = this.#createSingleStringWithKnowledgeNames(knowledges);
 
@@ -121,9 +125,9 @@ class UsersService {
   }
 
   #createArraysToInsertInTables(user, knowledges, existingKnowledges = []) {
-    const existKnowledgeInDatabase = existingKnowledges?.length <= 0;
+    const notExistKnowledgeInDatabase = existingKnowledges?.length <= 0;
 
-    if (existKnowledgeInDatabase)
+    if (notExistKnowledgeInDatabase)
       return this.#createArraysIfKnowledgeIsNotRegistered(user, knowledges);
 
     return this.#createArraysIfKnowledgeIsAlreadyRegistered(
@@ -194,9 +198,9 @@ class UsersService {
     };
   }
 
-  #knowledgesIsEmpty(knowledges) {
-    return knowledges?.length <= 0;
+  #arrayIsEmpty(array = []) {
+    return array?.length <= 0;
   }
 }
 
-export default UsersService;
+export default CreateUsersService;
