@@ -24,12 +24,13 @@ class UsersRepository {
 
       const result = await this.#sequelize.query(query);
 
-      const arrrayEmpty = result?.length <= 0;
-      if (arrrayEmpty) return result;
+      const arrayEmpty = result?.length <= 0;
+      if (arrayEmpty) return [];
 
       return result[0];
     } catch (error) {
       console.error('[ERRO NO BD, FIND ALL]: ' + error);
+      throw error;
     }
   }
 
@@ -46,6 +47,7 @@ class UsersRepository {
       return userSaved;
     } catch (error) {
       console.error('[ERRO NO BD, CREATE]: ' + error);
+      throw error;
     }
   }
 }
