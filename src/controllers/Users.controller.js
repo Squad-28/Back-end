@@ -47,6 +47,23 @@ class UsersController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
+
+  async index(req, res) {
+    try {
+      const sequelize = new Database().getConnection();
+      const indexUsersService = new IndexUsersService(
+        sequelize,
+        new UsersRepository(User, sequelize)
+      );
+      const users = await indexUsersService.index();
+
+      return res.status(201).json(users);
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
 }
 
 export default UsersController;
