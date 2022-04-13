@@ -1,4 +1,4 @@
-export const mockIndexUsers = [
+export const mockIndexUser = [
   {
     id: '0e8efa52-6b4a-4e1e-ab51-cd540841f5ba',
     name: 'Sophia Oliveira',
@@ -64,5 +64,5 @@ export const mockIndexUsers = [
   },
 ];
 
-export const expectedMockIndexUsers =
+export const expectedMockIndexUser =
   '[{"id":"0e8efa52-6b4a-4e1e-ab51-cd540841f5ba","name":"Sophia Oliveira","email":"gor.Moraes11@hotmail.com","description":"Beatae cum fugiat maxime voluptatem sequi quod officia.","level":"aut","knowledges":[{"name":"TEMPORA","score":4},{"name":"CONSEQUATUR","score":3},{"name":"ATQUE","score":2},{"name":"MODI","score":3}]},{"id":"fcff9852-3dee-4e76-8fb1-ead4aa85b467","name":"Sra. Maitê Albuquerque","email":"Leonardo_Pereira@yahoo.com","description":"Est rerum sit consectetur excepturi.","level":"dolore","knowledges":[{"name":"NIHIL","score":1},{"name":"AD","score":1},{"name":"MINUS","score":4}]}]';

@@ -5,7 +5,7 @@ const formatReturn = (result) => {
   return data;
 };
 
-class UsersRepository {
+class UserRepository {
   #User;
   #sequelize;
   constructor(User, sequelize) {
@@ -52,4 +52,4 @@ class UsersRepository {
   }
 }
 
-export default UsersRepository;
+export default UserRepository;

@@ -7,20 +7,20 @@ import {
   beforeAll,
   afterEach,
 } from '@jest/globals';
-import UsersRepository from '../../../../src/repository/Users.repository';
+import UserRepository from '../../../../src/repositories/User.repository';
 import User from '../../../../src/models/User';
 import Knowledge from '../../../../src/models/Knowledge';
 import KnowledgeList from '../../../../src/models/KnowledgeList';
 import userFactory from '../../../../src/utils/userFactory';
 import Database from '../../../../src/database';
-import IndexUsersService from '../../../../src/services/users/IndexUsersService';
-import { indexUsers } from './__mock__/mockIndexUsers';
+import IndexUserService from '../../../../src/services/users/IndexUser.service';
+import { indexUser } from './__mock__/mockIndexUser';
 import { deleteAllRecordsFromTables } from '../../../deleteAllRecordsFromTables';
 
 const database = new Database();
 const sequelize = database.getConnection();
 
-describe('services.IndexUsersService', () => {
+describe('services.IndexUser', () => {
   afterEach(async () => {
     // jest.restoreAllMocks();
     await deleteAllRecordsFromTables(database.getModels());
@@ -31,16 +31,16 @@ describe('services.IndexUsersService', () => {
 
   describe('#index', () => {
     test('Deve ser retornado os registros formatados das tabelas Users, Knowledges e KnowledgeList', async () => {
-      const userInstance = new User(indexUsers.mockUser);
+      const userInstance = new User(indexUser.mockUser);
       await userInstance.save();
 
-      await Knowledge.bulkCreate(indexUsers.mockKnow);
+      await Knowledge.bulkCreate(indexUser.mockKnowledge);
 
-      await KnowledgeList.bulkCreate(indexUsers.mockKnowList);
+      await KnowledgeList.bulkCreate(indexUser.mockKnowledgeList);
 
-      const service = new IndexUsersService(
+      const service = new IndexUserService(
         null,
-        new UsersRepository(User, sequelize)
+        new UserRepository(User, sequelize)
       );
 
       const result = await service.index();

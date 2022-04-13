@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
-class CreateUsersService {
+class CreateUserService {
   #sequelize;
   #usersRepo;
   #knowledgeRepo;
@@ -202,4 +202,4 @@ class CreateUsersService {
   }
 }
 
-export default CreateUsersService;
+export default CreateUserService;

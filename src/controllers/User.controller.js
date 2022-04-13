@@ -5,19 +5,19 @@ import Knowledge from '../models/Knowledge';
 import KnowledgeList from '../models/KnowledgeList';
 
 import Database from '../database';
-import UsersRepository from '../repository/Users.repository';
-import KnowledgeRepository from '../repository/Knowledge.repository';
-import KnowledgeListRepository from '../repository/KnowledgeList.repository';
-import IndexUsersService from '../services/users/IndexUsersService';
-import CreateUsersService from '../services/users/CreateUsersService';
+import UserRepository from '../repositories/Users.repository';
+import KnowledgeRepository from '../repositories/Knowledge.repository';
+import KnowledgeListRepository from '../repositories/KnowledgeList.repository';
+import IndexUserService from '../services/users/IndexUser.service';
+import CreateUserService from '../services/users/CreateUser.service';
 
-class UsersController {
-  getCreateUsersService() {
+class UserController {
+  getCreateUserService() {
     const sequelize = new Database().getConnection();
 
-    return new CreateUsersService(
+    return new CreateUserService(
       sequelize,
-      new UsersRepository(User),
+      new UserRepository(User),
       new KnowledgeRepository(Knowledge, sequelize),
       new KnowledgeListRepository(KnowledgeList)
     );
@@ -29,15 +29,15 @@ class UsersController {
 
     try {
       const sequelize = new Database().getConnection();
-      const createUsersService = new CreateUsersService(
+      const createUsersService = new CreateUserService(
         sequelize,
-        new UsersRepository(User),
+        new UserRepository(User),
         new KnowledgeRepository(Knowledge, sequelize),
         new KnowledgeListRepository(KnowledgeList)
       );
       const newUser = await createUsersService.create(user);
 
-      const service = this.getCreateUsersService();
+      const service = this.getCreateUserService();
       await service.create(user);
 
       return res.status(201).json(newUser);
@@ -51,9 +51,9 @@ class UsersController {
   async index(req, res) {
     try {
       const sequelize = new Database().getConnection();
-      const indexUsersService = new IndexUsersService(
+      const indexUsersService = new IndexUserService(
         sequelize,
-        new UsersRepository(User, sequelize)
+        new UserRepository(User, sequelize)
       );
       const users = await indexUsersService.index();
 
@@ -66,4 +66,4 @@ class UsersController {
   }
 }
 
-export default UsersController;
+export default UserController;

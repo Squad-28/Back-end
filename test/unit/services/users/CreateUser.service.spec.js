@@ -1,5 +1,5 @@
 import { jest, describe, test, expect } from '@jest/globals';
-import CreateUsersService from '../../../../src/services/users/CreateUsersService';
+import CreateUserService from '../../../../src/services/users/CreateUser.service';
 import userFactory from '../../../../src/utils/userFactory';
 
 const existingKnowledges = [
@@ -39,7 +39,7 @@ const mockKnowledges = [
 const mockUser = userFactory(1, 5)[0];
 mockUser.knowledge = mockKnowledges;
 
-describe('services.CreateUsersService', () => {
+describe('services.CreateUser', () => {
   const sequelize = {
     transaction: jest.fn().mockReturnThis(),
     commit: jest.fn().mockResolvedValue({}),
@@ -47,7 +47,7 @@ describe('services.CreateUsersService', () => {
   };
 
   describe('#create', () => {
-    const mockUsersRepository = {
+    const mockUserRepository = {
       create: jest.fn((newUser, transaction) => Promise.resolve(newUser)),
     };
 
@@ -65,9 +65,9 @@ describe('services.CreateUsersService', () => {
     };
 
     test('Deve conseguir passar em todas as chamadas e realizar  o commit do transaction', async () => {
-      const service = new CreateUsersService(
+      const service = new CreateUserService(
         sequelize,
-        mockUsersRepository,
+        mockUserRepository,
         mockKnowledgeRepository,
         mockKnowledgeListRepository
       );
@@ -76,7 +76,7 @@ describe('services.CreateUsersService', () => {
 
       expect(mockKnowledgeRepository.findByName).toBeCalledTimes(1);
       expect(sequelize.transaction).toBeCalledTimes(1);
-      expect(mockUsersRepository.create).toBeCalledTimes(1);
+      expect(mockUserRepository.create).toBeCalledTimes(1);
       expect(mockKnowledgeRepository.bulkCreate).toBeCalledTimes(1);
       expect(mockKnowledgeListRepository.bulkCreate).toBeCalledTimes(1);
       expect(sequelize.commit).toBeCalledTimes(1);
