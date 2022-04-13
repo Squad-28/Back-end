@@ -1,11 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
-import HTTP500Error from '../../errors/httpErrors/HTTP500Error';
-import { BcryptEncryptionHelper } from '../../helpers/security/BcryptEncryptionHelper';
-
-import dontenv from 'dotenv';
-
-dontenv.config();
+import bcrypt from 'bcrypt';
 
 class CreateUsersService {
   #sequelize;
@@ -29,6 +23,8 @@ class CreateUsersService {
     let knowledges = user?.knowledge;
     delete user?.knowledge;
 
+    user.password = await bcrypt.hash(user.password, 8);
+
     const formatedKnowledges = this.#formatKnowledges(knowledges);
     // console.log('formatedKnowledges', formatedKnowledges);
 
@@ -50,6 +46,7 @@ class CreateUsersService {
       const { toInsertInKnowledgeTable, toInsertInKnowledgeListTable } =
         arraysToInsertInTables;
 
+      console.log(user);
       await this.#usersRepo.create(user, transaction);
 
       await this.#insertOrNotKnowledgeInDatabase(
