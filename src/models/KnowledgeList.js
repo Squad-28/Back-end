@@ -1,13 +1,24 @@
 import { Model, DataTypes } from 'sequelize';
+import 'dotenv/config';
 
 class KnowledgeList extends Model {
   static init(sequelize) {
+    const isTestEnv = process.env.NODE_ENV === 'test';
+
+    const scoreType = isTestEnv
+      ? DataTypes.INTEGER(1)
+      : DataTypes.INTEGER(1).UNSIGNED.ZEROFILL;
+
     super.init(
       {
-        id_user: {
+        id: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
+        },
+        id_user: {
+          type: DataTypes.UUID,
+          allowNull: false,
           references: {
             key: 'id',
             model: 'users',
@@ -16,14 +27,13 @@ class KnowledgeList extends Model {
         id_knowledge: {
           type: DataTypes.UUID,
           allowNull: false,
-          primaryKey: true,
           references: {
             key: 'id',
             model: 'knowledges',
           },
         },
         score: {
-          type: DataTypes.INTEGER(1).UNSIGNED.ZEROFILL,
+          type: scoreType,
           allowNull: false,
         },
       },

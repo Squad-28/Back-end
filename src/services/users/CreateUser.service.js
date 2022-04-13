@@ -1,12 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcrypt';
 
-import HTTP500Error from '../errors/httpErrors/HTTP500Error';
-import { BcryptEncryptionHelper } from '../helpers/security/BcryptEncryptionHelper';
-
-import dontenv from 'dotenv';
-dontenv.config();
-
-class UsersService {
+class CreateUserService {
   #sequelize;
   #usersRepo;
   #knowledgeRepo;
@@ -22,8 +17,14 @@ class UsersService {
   async create(user) {
     user.id = uuidv4();
 
+    // console.log(user);
+    // return;
+    await this.#verifyIfEmailExists(user.email);
+
     let knowledges = user?.knowledge;
     delete user?.knowledge;
+
+    user.password = await bcrypt.hash(user.password, 8);
 
     const formatedKnowledges = this.#formatKnowledges(knowledges);
     // console.log('formatedKnowledges', formatedKnowledges);
@@ -46,6 +47,7 @@ class UsersService {
       const { toInsertInKnowledgeTable, toInsertInKnowledgeListTable } =
         arraysToInsertInTables;
 
+      console.log(user);
       await this.#usersRepo.create(user, transaction);
 
       await this.#insertOrNotKnowledgeInDatabase(
@@ -67,8 +69,19 @@ class UsersService {
     }
   }
 
+  async #verifyIfEmailExists(email) {
+    const userFound = await this.#usersRepo.findByEmail(email);
+    console.log(userFound);
+
+    if (userFound) {
+      throw new Error({
+        error: [{ email: 'Email já cadastrado.' }],
+      });
+    }
+  }
+
   #formatKnowledges(knowledges = []) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     return knowledges.map((knowledge) => {
       knowledge.name = knowledge.name.toUpperCase();
@@ -78,13 +91,13 @@ class UsersService {
   }
 
   async #insertOrNotKnowledgeInDatabase(knowledges, transaction) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     return await this.#knowledgeRepo.bulkCreate(knowledges, transaction);
   }
 
   async #insertOrNotKnowledgeListInDatabase(knowledgesList, transaction) {
-    if (this.#knowledgesIsEmpty(knowledgesList)) return [];
+    if (this.#arrayIsEmpty(knowledgesList)) return [];
 
     return await this.#knowledgeListRepo.bulkCreate(
       knowledgesList,
@@ -93,7 +106,7 @@ class UsersService {
   }
 
   async #getKnowledgesExistingInDatabase(knowledges = []) {
-    if (this.#knowledgesIsEmpty(knowledges)) return [];
+    if (this.#arrayIsEmpty(knowledges)) return [];
 
     const names = this.#createSingleStringWithKnowledgeNames(knowledges);
 
@@ -121,9 +134,9 @@ class UsersService {
   }
 
   #createArraysToInsertInTables(user, knowledges, existingKnowledges = []) {
-    const existKnowledgeInDatabase = existingKnowledges?.length <= 0;
+    const notExistKnowledgeInDatabase = existingKnowledges?.length <= 0;
 
-    if (existKnowledgeInDatabase)
+    if (notExistKnowledgeInDatabase)
       return this.#createArraysIfKnowledgeIsNotRegistered(user, knowledges);
 
     return this.#createArraysIfKnowledgeIsAlreadyRegistered(
@@ -139,6 +152,7 @@ class UsersService {
 
     knowledges.forEach((knowledge) => {
       toInsertInKnowledgeListTable.push({
+        id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledge.id,
         score: knowledge.score,
@@ -182,6 +196,7 @@ class UsersService {
       );
 
       return {
+        id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledgeFound.id,
         score: oldKnowledge.score,
@@ -194,9 +209,9 @@ class UsersService {
     };
   }
 
-  #knowledgesIsEmpty(knowledges) {
-    return knowledges?.length <= 0;
+  #arrayIsEmpty(array = []) {
+    return array?.length <= 0;
   }
 }
 
-export default UsersService;
+export default CreateUserService;

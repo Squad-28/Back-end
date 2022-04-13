@@ -18,7 +18,6 @@ export default function userFactory(userAmount = 1, knowledgeAmount = 5) {
       password: faker.internet.password(),
       level: faker.lorem.word(),
       description: faker.lorem.text(),
-      contact: faker.lorem.text(),
       knowledge: knowledgeFactory(knowledgeAmount),
     });
   }

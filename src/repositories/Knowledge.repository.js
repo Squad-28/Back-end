@@ -1,5 +1,5 @@
 const formatReturn = (result) => {
-  const data = result.dataValues;
+  const data = result?.dataValues;
   delete data?.createdAt;
   delete data?.updatedAt;
   return data;
@@ -25,6 +25,7 @@ class KnowledgeRepository {
       return knowledges;
     } catch (error) {
       console.error('[ERRO NO BD, FIND ALL]: ' + error);
+      throw error;
     }
   }
 
@@ -32,9 +33,11 @@ class KnowledgeRepository {
     try {
       const query = `SELECT id, name FROM knowledges WHERE name IN (${names});`;
       const result = await this.#sequelize.query(query);
+      console.log('result', result);
       return result;
     } catch (error) {
       console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+      throw error;
     }
   }
 
@@ -45,6 +48,7 @@ class KnowledgeRepository {
       });
     } catch (error) {
       console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+      throw error;
     }
   }
 }

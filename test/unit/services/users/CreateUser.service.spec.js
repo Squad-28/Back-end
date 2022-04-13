@@ -1,6 +1,6 @@
 import { jest, describe, test, expect } from '@jest/globals';
-import UsersService from '../../../src/services/Users.service';
-import userFactory from '../../../src/utils/userFactory';
+import CreateUserService from '../../../../src/services/users/CreateUser.service';
+import userFactory from '../../../../src/utils/userFactory';
 
 const existingKnowledges = [
   {
@@ -39,34 +39,35 @@ const mockKnowledges = [
 const mockUser = userFactory(1, 5)[0];
 mockUser.knowledge = mockKnowledges;
 
-const mockUsersRepository = {
-  create: jest.fn((newUser, transaction) => Promise.resolve(newUser)),
-};
+describe('services.CreateUser', () => {
+  const sequelize = {
+    transaction: jest.fn().mockReturnThis(),
+    commit: jest.fn().mockResolvedValue({}),
+    rollback: jest.fn().mockResolvedValue({}),
+  };
 
-const mockKnowledgeRepository = {
-  findByName: jest.fn().mockResolvedValue(existingKnowledges),
-  bulkCreate: jest.fn((knowledges, transaction) => Promise.resolve(knowledges)),
-  findAll: jest.fn().mockResolvedValue([]),
-};
-
-const mockKnowledgeListRepository = {
-  bulkCreate: jest.fn((knowledgesList, transaction) =>
-    Promise.resolve(knowledgesList)
-  ),
-};
-
-const sequelize = {
-  transaction: jest.fn().mockReturnThis(),
-  commit: jest.fn().mockResolvedValue({}),
-  rollback: jest.fn().mockResolvedValue({}),
-};
-
-describe('services.UsersService', () => {
   describe('#create', () => {
+    const mockUserRepository = {
+      create: jest.fn((newUser, transaction) => Promise.resolve(newUser)),
+    };
+
+    const mockKnowledgeRepository = {
+      findByName: jest.fn().mockResolvedValue(existingKnowledges),
+      bulkCreate: jest.fn((knowledges, transaction) =>
+        Promise.resolve(knowledges)
+      ),
+    };
+
+    const mockKnowledgeListRepository = {
+      bulkCreate: jest.fn((knowledgesList, transaction) =>
+        Promise.resolve(knowledgesList)
+      ),
+    };
+
     test('Deve conseguir passar em todas as chamadas e realizar  o commit do transaction', async () => {
-      const service = new UsersService(
+      const service = new CreateUserService(
         sequelize,
-        mockUsersRepository,
+        mockUserRepository,
         mockKnowledgeRepository,
         mockKnowledgeListRepository
       );
@@ -75,7 +76,7 @@ describe('services.UsersService', () => {
 
       expect(mockKnowledgeRepository.findByName).toBeCalledTimes(1);
       expect(sequelize.transaction).toBeCalledTimes(1);
-      expect(mockUsersRepository.create).toBeCalledTimes(1);
+      expect(mockUserRepository.create).toBeCalledTimes(1);
       expect(mockKnowledgeRepository.bulkCreate).toBeCalledTimes(1);
       expect(mockKnowledgeListRepository.bulkCreate).toBeCalledTimes(1);
       expect(sequelize.commit).toBeCalledTimes(1);
