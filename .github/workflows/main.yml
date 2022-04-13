@@ -24,10 +24,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Rename .env.example
         run: cp .env.example .env
 
       - name: Run all test
         run: yarn test
+
+      - name: Deploy application
+        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: 'squad-28-technical-share'
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
