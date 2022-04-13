@@ -1,0 +1,30 @@
+name: Complete pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    types: [opened, reopened]
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+        mysql-version: [8.0]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run all test
+        run: yarn test
