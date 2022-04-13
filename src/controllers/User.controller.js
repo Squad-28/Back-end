@@ -5,24 +5,13 @@ import Knowledge from '../models/Knowledge';
 import KnowledgeList from '../models/KnowledgeList';
 
 import Database from '../database';
-import UserRepository from '../repositories/Users.repository';
+import UserRepository from '../repositories/User.repository';
 import KnowledgeRepository from '../repositories/Knowledge.repository';
 import KnowledgeListRepository from '../repositories/KnowledgeList.repository';
 import IndexUserService from '../services/users/IndexUser.service';
 import CreateUserService from '../services/users/CreateUser.service';
 
 class UserController {
-  getCreateUserService() {
-    const sequelize = new Database().getConnection();
-
-    return new CreateUserService(
-      sequelize,
-      new UserRepository(User),
-      new KnowledgeRepository(Knowledge, sequelize),
-      new KnowledgeListRepository(KnowledgeList)
-    );
-  }
-
   async create(req, res) {
     const user = userFactory()[0];
     // const { user } = req.body;
@@ -36,9 +25,6 @@ class UserController {
         new KnowledgeListRepository(KnowledgeList)
       );
       const newUser = await createUsersService.create(user);
-
-      const service = this.getCreateUserService();
-      await service.create(user);
 
       return res.status(201).json(newUser);
     } catch (error) {

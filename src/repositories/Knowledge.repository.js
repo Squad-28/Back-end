@@ -1,5 +1,5 @@
 const formatReturn = (result) => {
-  const data = result.dataValues;
+  const data = result?.dataValues;
   delete data?.createdAt;
   delete data?.updatedAt;
   return data;
