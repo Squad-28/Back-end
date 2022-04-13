@@ -1,7 +1,8 @@
 const formatReturn = (result) => {
-  const data = result.dataValues;
+  const data = result?.dataValues;
   delete data?.createdAt;
   delete data?.updatedAt;
+  delete data?.password;
   return data;
 };
 
@@ -45,6 +46,18 @@ class UserRepository {
       userSaved = formatReturn(userSaved);
 
       return userSaved;
+    } catch (error) {
+      console.error('[ERRO NO BD, CREATE]: ' + error);
+      throw error;
+    }
+  }
+
+  async findByEmail(email) {
+    try {
+      const user = await this.#User.findOne({ where: { email } });
+      console.log(user);
+
+      return formatReturn(user);
     } catch (error) {
       console.error('[ERRO NO BD, CREATE]: ' + error);
       throw error;
