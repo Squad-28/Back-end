@@ -1,4 +1,6 @@
 .git
-.old-*
+old-*
 node_modules
 docs
+dist
+teste-*
