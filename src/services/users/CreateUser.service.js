@@ -19,6 +19,7 @@ class CreateUserService {
 
     // console.log(user);
     // return;
+    await this.#verifyIfEmailExists(user.email);
 
     let knowledges = user?.knowledge;
     delete user?.knowledge;
@@ -65,6 +66,17 @@ class CreateUserService {
       console.error(error);
       await transaction.rollback();
       throw error;
+    }
+  }
+
+  async #verifyIfEmailExists(email) {
+    const userFound = await this.#usersRepo.findByEmail(email);
+    console.log(userFound);
+
+    if (userFound) {
+      throw new Error({
+        error: [{ email: 'Email já cadastrado.' }],
+      });
     }
   }
 
