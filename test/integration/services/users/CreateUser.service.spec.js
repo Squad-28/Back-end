@@ -11,7 +11,7 @@ import CreateUserService from '../../../../src/services/users/CreateUser.service
 import UserRepository from '../../../../src/repositories/User.repository';
 import KnowledgeRepository from '../../../../src/repositories/Knowledge.repository';
 import KnowledgeListRepository from '../../../../src/repositories/KnowledgeList.repository';
-import Users from '../../../../src/models/User';
+import User from '../../../../src/models/User';
 import Knowledge from '../../../../src/models/Knowledge';
 import KnowledgeList from '../../../../src/models/KnowledgeList';
 import userFactory from '../../../../src/utils/userFactory';
@@ -30,7 +30,7 @@ describe('services.CreateUser', () => {
   beforeAll(async () => await database.start());
   afterAll(async () => await database.close());
 
-  //knows ja criado, sem knows, email ja existente
+  //knows ja criado, sem knows
   describe('#create', () => {
     test('Deve ser cadastrado no banco os registros das tabelas Users, Knowledges e KnowledgeList', async () => {
       const numberOfExpectedRecords = 5;
@@ -41,7 +41,7 @@ describe('services.CreateUser', () => {
 
       const service = new CreateUserService(
         sequelize,
-        new UserRepository(Users),
+        new UserRepository(User),
         new KnowledgeRepository(Knowledge, sequelize),
         new KnowledgeListRepository(KnowledgeList)
       );
@@ -58,6 +58,24 @@ describe('services.CreateUser', () => {
       const result = await sequelize.query(query);
 
       expect(result[0]).toHaveLength(numberOfExpectedRecords);
+    });
+
+    test('Deve retornar erro ao tentar cadastrar um usuario com email já existente', async () => {
+      const user = userFactory()[0];
+      delete user.knowledge;
+
+      const service = new CreateUserService(
+        sequelize,
+        new UserRepository(User),
+        new KnowledgeRepository(Knowledge, sequelize),
+        new KnowledgeListRepository(KnowledgeList)
+      );
+
+      await User.bulkCreate([user]);
+
+      const create = async () => await service.create(user);
+
+      await expect(create).rejects.toThrowError(Error);
     });
   });
 });
