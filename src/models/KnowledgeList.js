@@ -11,10 +11,14 @@ class KnowledgeList extends Model {
 
     super.init(
       {
-        id_user: {
+        id: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
+        },
+        id_user: {
+          type: DataTypes.UUID,
+          allowNull: false,
           references: {
             key: 'id',
             model: 'users',
@@ -23,7 +27,6 @@ class KnowledgeList extends Model {
         id_knowledge: {
           type: DataTypes.UUID,
           allowNull: false,
-          primaryKey: true,
           references: {
             key: 'id',
             model: 'knowledges',

@@ -23,8 +23,8 @@ class CreateUsersService {
   async create(user) {
     user.id = uuidv4();
 
-    console.log(user);
-    return;
+    // console.log(user);
+    // return;
 
     let knowledges = user?.knowledge;
     delete user?.knowledge;
@@ -143,6 +143,7 @@ class CreateUsersService {
 
     knowledges.forEach((knowledge) => {
       toInsertInKnowledgeListTable.push({
+        id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledge.id,
         score: knowledge.score,
@@ -186,6 +187,7 @@ class CreateUsersService {
       );
 
       return {
+        id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledgeFound.id,
         score: oldKnowledge.score,

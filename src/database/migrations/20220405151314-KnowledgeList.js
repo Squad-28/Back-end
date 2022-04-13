@@ -3,10 +3,14 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('knowledge_list', {
-      id_user: {
+      id: {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
+      },
+      id_user: {
+        type: Sequelize.DataTypes.UUID,
+        allowNull: false,
         references: {
           key: 'id',
           model: 'users',
@@ -15,7 +19,6 @@ module.exports = {
       id_knowledge: {
         type: Sequelize.DataTypes.UUID,
         allowNull: false,
-        primaryKey: true,
         references: {
           key: 'id',
           model: 'knowledges',
