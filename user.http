@@ -1,24 +1,29 @@
+GET http://localhost:3333/ HTTP/1.1
+
+###
 GET http://localhost:3333/users HTTP/1.1
 
 ###
+GET http://localhost:3333/users/e1dea2f9-79fa-466f-bd19-712123b2b0a9 HTTP/1.1
 
+###
 POST http://localhost:3333/users HTTP/1.1
 content-type: application/json
 
 {
 	"user": {
-		"name": "",
-		"email": "",
-		"password": "",
-		"description": "",
-		"contact": "",
-		"level": "",
-		"knowledge": [
-			{ "name": "nodejs", "score": 5 },
-			{ "name": "reactjs", "score": 4 },
-			{ "name": "backend", "score": 3 },
+		"name": "Mario Monteiro",
+		"email": "teste@gmail.com",
+		"password": "123456",
+		"description": "Testando a aplicação no heroku",
+		"level": "Junior",
+		"knowledges": [
+			{ "name": "nodejs", "score": 2 },
+			{ "name": "reactjs", "score": 1 },
+			{ "name": "backend", "score": 2 },
 			{ "name": "sql", "score": 2 },
-			{ "name": "mysql", "score": 1 }
+			{ "name": "mysql", "score": 2 }
 		]
 	}
 }
+### get user/:id e get knowledges
