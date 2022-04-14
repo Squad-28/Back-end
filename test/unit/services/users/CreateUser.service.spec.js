@@ -49,6 +49,7 @@ describe('services.CreateUser', () => {
   describe('#create', () => {
     const mockUserRepository = {
       create: jest.fn((newUser, transaction) => Promise.resolve(newUser)),
+      findByEmail: jest.fn((email) => Promise.resolve(undefined)),
     };
 
     const mockKnowledgeRepository = {

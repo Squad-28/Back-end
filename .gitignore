@@ -7,3 +7,5 @@ yarn-error.log*
 config/config.json
 old-*
 docs/ideias.md
+teste-*
+dist

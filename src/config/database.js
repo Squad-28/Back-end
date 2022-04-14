@@ -1,6 +1,6 @@
 require('dotenv/config');
 
-const defaultConfig = () => ({
+const developmentConfig = () => ({
   dialect: process.env.DB_DIALECT,
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
@@ -15,4 +15,17 @@ const defaultConfig = () => ({
 
 const testConfig = 'sqlite::memory:';
 
-module.exports = process.env.NODE_ENV === 'test' ? testConfig : defaultConfig();
+const productionConfig = process.env.CLEARDB_DATABASE_URL;
+
+const NODE_ENV = process.env.NODE_ENV;
+let config;
+
+if (NODE_ENV === 'production') {
+  config = productionConfig;
+} else if (NODE_ENV === 'test') {
+  config = testConfig;
+} else {
+  config = developmentConfig();
+}
+
+module.exports = config;
