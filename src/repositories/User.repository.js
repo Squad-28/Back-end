@@ -52,6 +52,29 @@ class UserRepository {
     }
   }
 
+  async findById(id) {
+    try {
+      const query = `
+        SELECT 
+          u.id, u.name, u.email, u.description, u.level, k.name as knowledge_name, kl.score as knowledge_score
+        FROM knowledge_list kl 
+        JOIN users u ON kl.id_user = u.id 
+        JOIN knowledges k ON kl.id_knowledge = k.id
+        WHERE u.id = '${id}';`;
+
+      const result = await this.#sequelize.query(query);
+
+      const arrayEmpty = result?.length <= 0;
+      if (arrayEmpty) return [];
+
+      return result[0];
+    } catch (error) {
+      console.error('[ERRO NO BD, FIND ALL]: ' + error);
+
+      throw error;
+    }
+  }
+
   async findByEmail(email) {
     try {
       const user = await this.#User.findOne({ where: { email } });
