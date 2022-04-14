@@ -1,1 +1,1 @@
-web: yarn --frozen-lockfile
+web: yarn start
