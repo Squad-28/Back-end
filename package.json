@@ -10,8 +10,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test npx jest --config jest.config.js --runInBand --detectOpenHandles",
     "test:w": "cross-env NODE_ENV=test npx jest --config jest.config.js --runInBand --detectOpenHandles --watch",
-    "prebuild": "rimraf ./dist",
+    "prebuild": "npx rimraf ./dist",
     "build": "npx sucrase ./src -d ./dist --transforms imports",
+    "heroku-cleanup": "rm -rf ./src ./test ./docs",
     "start": "node ./dist/server.js",
     "dev": "nodemon ./src/server.js",
     "db:migrate": "npx sequelize-cli db:migrate",
