@@ -1,6 +1,6 @@
 import formatAllUsers from '../../utils/formatAllUsers';
 
-class IndexUserService {
+class FindByIdUserService {
   #sequelize;
   #usersRepo;
 
@@ -9,13 +9,13 @@ class IndexUserService {
     this.#usersRepo = usersRepo;
   }
 
-  async index() {
+  async findById(id) {
     try {
-      const result = await this.#usersRepo.index();
+      const result = await this.#usersRepo.findById(id);
 
-      const users = formatAllUsers(result);
+      const [user] = formatAllUsers(result);
 
-      return users;
+      return user;
     } catch (error) {
       console.log(error);
       throw error;
@@ -23,4 +23,4 @@ class IndexUserService {
   }
 }
 
-export default IndexUserService;
+export default FindByIdUserService;

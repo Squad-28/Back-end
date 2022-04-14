@@ -9,3 +9,5 @@ old-*
 docs/ideias.md
 teste-*
 dist
+prod.*
+requestP*

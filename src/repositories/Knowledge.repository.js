@@ -35,7 +35,6 @@ class KnowledgeRepository {
     try {
       const query = `SELECT id, name FROM knowledges WHERE name IN (${names});`;
       const result = await this.#sequelize.query(query);
-      console.log('result', result);
       return result;
     } catch (error) {
       console.error('[ERRO NO BD, BULK CREATE]: ' + error);
