@@ -19,8 +19,8 @@ class CreateUserService {
 
     await this.#verifyIfEmailExists(user.email);
 
-    let knowledges = user?.knowledge;
-    delete user?.knowledge;
+    const knowledges = user?.knowledges;
+    delete user?.knowledges;
 
     user.password = await bcrypt.hash(user.password, 8);
 
