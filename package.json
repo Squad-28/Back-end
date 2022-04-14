@@ -4,7 +4,8 @@
   "description": "Sistema desenvolvido para o Programa de Formação Season 3 da FCamara",
   "main": "src/server.js",
   "engines": {
-    "node": "16.x"
+    "node": "16.x",
+    "yarn": "1.22.x"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test npx jest --config jest.config.js --runInBand --detectOpenHandles",
