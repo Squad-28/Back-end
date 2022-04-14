@@ -1,7 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import HTTP500Error from '../../errors/httpErrors/HTTP500Error';
-
 class IndexUserService {
   #sequelize;
   #usersRepo;
@@ -73,16 +69,10 @@ class IndexUserService {
 
   #fillInUserKnowledge(users, usersSearched) {
     const usersWithKnowledges = users.map((user) => {
-      const user_id = user.id;
-
-      console.log('user_id', user_id);
-      //***ver se tem knowledge, se n tiver, ja retorna o usuario
       const usersFilteredById = usersSearched.filter(
         (userSearched) => userSearched.id === user.id
       );
-      console.log('usersFilteredById', usersFilteredById);
 
-      //map -> knowledges
       const knowledges = usersFilteredById.map((userFiltered) => {
         const { knowledge_name: name, knowledge_score: score } = userFiltered;
 
@@ -91,7 +81,6 @@ class IndexUserService {
           score,
         };
       });
-      console.log('knowledges', knowledges);
 
       user.knowledges = knowledges;
       return user;
