@@ -23,37 +23,32 @@ RESPONSE:
 
 ```js
 {
-	users: [
-	{
-		name:'',
-		email:'',
-		description:'',
-		contact:'Telegram: telegram.com/blabla',
-		level:'Pleno',
-		knowledge: [
-			{ name: 'nodejs', score: 5 },
-			{ name: 'reactjs', score: 4 },
-			{ name: 'backend', score: 3 },
-			{ name: 'sql', score: 2 },
-			{ name: 'mysql', score: 1 }
-		]
-	},{
-		name:'',
-		email:'',
-		description:'',
-		contact:'',
-		level:''
-	},{
-		name:'',
-		email:'',
-		description:'',
-		level:''
-	},{
-		name:'',
-		email:'',
-		level:''
-	}
-	]
+  users: [
+    {
+      name: '',
+      email: '',
+      description: '',
+      level: 'Pleno',
+      knowledges: [
+        { name: 'nodejs', score: 5 },
+        { name: 'reactjs', score: 4 },
+        { name: 'backend', score: 3 },
+        { name: 'sql', score: 2 },
+        { name: 'mysql', score: 1 },
+      ],
+    },
+    {
+      name: '',
+      email: '',
+      description: '',
+      level: '',
+    },
+    {
+      name: '',
+      email: '',
+      level: '',
+    },
+  ];
 }
 ```
 
@@ -75,9 +70,8 @@ RESPONSE:
 		name:'',
 		email:'',
 		description:'',
-		contact:'',
 		level:'',
-		knowledge: [
+		knowledges: [
 			{ name: 'nodejs', score: 5 },
 			{ name: 'reactjs', score: 4 },
 			{ name: 'backend', score: 3 },
@@ -109,7 +103,7 @@ REQUEST:
 		description:'',
 		contact:'',
 		level:'',//
-		knowledge: [
+		knowledges: [
 			{ name: 'nodejs', score: 5 },
 			{ name: 'reactjs', score: 4 },
 			{ name: 'backend', score: 3 },
@@ -138,7 +132,7 @@ RESPONSE:
 
 ```js
 {
-	knowledges: ['nodejs','reactjs','backend','sql','mysql']
+  knowledges: ['nodejs', 'reactjs', 'backend', 'sql', 'mysql'];
 }
 ```
 
@@ -180,7 +174,7 @@ BACKEND:
 {
 	user: {
 		id: '',
-		knowledge: [
+		knowledges: [
 			{ name: 'nodejs', score: 5 },
 			{ name: 'reactjs', score: 4 },
 			{ name: 'backend', score: 3 },
@@ -193,7 +187,7 @@ BACKEND:
 {
 	user: {
 		id: '',
-		knowledge: [
+		knowledges: [
 			{ name: 'php', score: 5 }
 		]
 	}
@@ -202,7 +196,7 @@ BACKEND:
 {
 	user: {
 		id: '',
-		knowledge: [
+		knowledges: [
 			{ name: 'nodejs', score: 5 },
 			{ name: 'mysql', score: 3 }
 		]
@@ -226,16 +220,11 @@ BACKEND:
 ## Telas
 
 1. Home
-	- mostra todos os usuarios ([descrito aqui](#get-users));
-	- tem barra de filtro por conhecimento, conforme a pessoa escreve o conhecimento, busca e mostra só os usuarios que tem esse conhecimento ([descrito aqui](#filtro-por-conhecimento));
+   - mostra todos os usuarios ([descrito aqui](#get-users));
+   - tem barra de filtro por conhecimento, conforme a pessoa escreve o conhecimento, busca e mostra só os usuarios que tem esse conhecimento ([descrito aqui](#filtro-por-conhecimento));
 2. Cadastro
-	- mostra os campos de cadastro ([descrito aqui](#post-user))
+   - mostra os campos de cadastro ([descrito aqui](#post-user))
 3. Usuario
-	- mostra os campos do usuario cadastrado e da a opcão de editar ([descrito aqui](#put-userid))
-
-
-
-
+   - mostra os campos do usuario cadastrado e da a opcão de editar ([descrito aqui](#put-userid))
 
 filtro vai ser diferente, manda o que a pessoa escreveu pro backend
-
