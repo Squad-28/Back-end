@@ -1,5 +1,3 @@
-import userFactory from '../utils/userFactory';
-
 import User from '../models/User';
 import Knowledge from '../models/Knowledge';
 import KnowledgeList from '../models/KnowledgeList';
@@ -13,8 +11,7 @@ import CreateUserService from '../services/users/CreateUser.service';
 
 class UserController {
   async create(req, res) {
-    const user = userFactory()[0];
-    // const { user } = req.body;
+    const { user } = req.body;
 
     try {
       const sequelize = new Database().getConnection();
@@ -24,9 +21,9 @@ class UserController {
         new KnowledgeRepository(Knowledge, sequelize),
         new KnowledgeListRepository(KnowledgeList)
       );
-      const newUser = await createUsersService.create(user);
+      await createUsersService.create(user);
 
-      return res.status(201).json(newUser);
+      return res.status(201).json();
     } catch (error) {
       console.error(error);
 

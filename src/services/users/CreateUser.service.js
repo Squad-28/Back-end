@@ -17,8 +17,6 @@ class CreateUserService {
   async create(user) {
     user.id = uuidv4();
 
-    // console.log(user);
-    // return;
     await this.#verifyIfEmailExists(user.email);
 
     let knowledges = user?.knowledge;
@@ -27,19 +25,16 @@ class CreateUserService {
     user.password = await bcrypt.hash(user.password, 8);
 
     const formatedKnowledges = this.#formatKnowledges(knowledges);
-    // console.log('formatedKnowledges', formatedKnowledges);
 
     const existingKnowledges = await this.#getKnowledgesExistingInDatabase(
       formatedKnowledges
     );
-    // console.log('existingKnowledges', existingKnowledges);
 
     const arraysToInsertInTables = this.#createArraysToInsertInTables(
       user,
       formatedKnowledges,
       existingKnowledges
     );
-    // console.log('arraysToInsertInTables', arraysToInsertInTables);
 
     const transaction = await this.#sequelize.transaction();
 
@@ -47,7 +42,6 @@ class CreateUserService {
       const { toInsertInKnowledgeTable, toInsertInKnowledgeListTable } =
         arraysToInsertInTables;
 
-      console.log(user);
       await this.#usersRepo.create(user, transaction);
 
       await this.#insertOrNotKnowledgeInDatabase(
@@ -60,10 +54,10 @@ class CreateUserService {
         transaction
       );
 
-      // throw new Error();
       await transaction.commit();
     } catch (error) {
       console.error(error);
+
       await transaction.rollback();
       throw error;
     }
@@ -71,7 +65,6 @@ class CreateUserService {
 
   async #verifyIfEmailExists(email) {
     const userFound = await this.#usersRepo.findByEmail(email);
-    console.log(userFound);
 
     if (userFound) {
       throw new Error({

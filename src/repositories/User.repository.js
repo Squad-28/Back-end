@@ -9,6 +9,7 @@ const formatReturn = (result) => {
 class UserRepository {
   #User;
   #sequelize;
+
   constructor(User, sequelize) {
     this.#User = User;
     this.#sequelize = sequelize;
@@ -31,12 +32,10 @@ class UserRepository {
       return result[0];
     } catch (error) {
       console.error('[ERRO NO BD, FIND ALL]: ' + error);
+
       throw error;
     }
   }
-
-  // async findUserByIdWithKnowledges(){}
-  // async findAllUserWithKnowledges(){}
 
   async create(user, transaction = null) {
     try {
@@ -48,6 +47,7 @@ class UserRepository {
       return userSaved;
     } catch (error) {
       console.error('[ERRO NO BD, CREATE]: ' + error);
+
       throw error;
     }
   }
@@ -55,11 +55,11 @@ class UserRepository {
   async findByEmail(email) {
     try {
       const user = await this.#User.findOne({ where: { email } });
-      console.log(user);
 
       return formatReturn(user);
     } catch (error) {
       console.error('[ERRO NO BD, CREATE]: ' + error);
+
       throw error;
     }
   }

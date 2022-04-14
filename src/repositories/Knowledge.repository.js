@@ -8,6 +8,7 @@ const formatReturn = (result) => {
 class KnowledgeRepository {
   #Knowledge;
   #sequelize;
+
   constructor(Knowledge, sequelize) {
     this.#Knowledge = Knowledge;
     this.#sequelize = sequelize;
@@ -25,6 +26,7 @@ class KnowledgeRepository {
       return knowledges;
     } catch (error) {
       console.error('[ERRO NO BD, FIND ALL]: ' + error);
+
       throw error;
     }
   }
@@ -37,6 +39,7 @@ class KnowledgeRepository {
       return result;
     } catch (error) {
       console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+
       throw error;
     }
   }
@@ -48,6 +51,7 @@ class KnowledgeRepository {
       });
     } catch (error) {
       console.error('[ERRO NO BD, BULK CREATE]: ' + error);
+
       throw error;
     }
   }
