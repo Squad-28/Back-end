@@ -8,6 +8,8 @@
 
 Technical Share é uma API com o objetivo de facilitar o encontro entre pessoas com conhecimentos específicos e para ter uma possível comunicação (através do campo de email) para tirar dúvidas, ter troca de conhecimentos.
 
+O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
+
 [Link para o backend em produção](https://squad-28-technical-share.herokuapp.com/api-docs)
 
 [Repositório do backend](https://github.com/Squad-28/back-end)
