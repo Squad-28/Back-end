@@ -22,7 +22,6 @@ const sequelize = database.getConnection();
 
 describe('services.IndexUser', () => {
   afterEach(async () => {
-    // jest.restoreAllMocks();
     await deleteAllRecordsFromTables(database.getModels());
   });
 

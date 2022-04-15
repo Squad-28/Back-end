@@ -1,5 +1,4 @@
 import {
-  jest,
   describe,
   test,
   expect,
@@ -23,21 +22,16 @@ const sequelize = database.getConnection();
 
 describe('services.CreateUser', () => {
   afterEach(async () => {
-    // jest.restoreAllMocks();
     await deleteAllRecordsFromTables(database.getModels());
   });
 
   beforeAll(async () => await database.start());
   afterAll(async () => await database.close());
 
-  //knows ja criado, sem knows
   describe('#create', () => {
     test('Deve ser cadastrado no banco os registros das tabelas Users, Knowledges e KnowledgeList', async () => {
       const numberOfExpectedRecords = 5;
       const mockUser = userFactory(1, numberOfExpectedRecords)[0];
-
-      // const userRepo = new UsersRepo(Users);
-      // await userRepo.create(mockUser);
 
       const service = new CreateUserService(
         sequelize,
