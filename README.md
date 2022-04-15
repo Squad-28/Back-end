@@ -42,7 +42,7 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 
 ## Sumario
 
-- [Sobre a API](#sobre-a-api)
+- [Sobre a API](#sobre-o-projeto)
 - [Funcionalidades](#funcionalidades)
   - [Desenvolvido](#desenvolvido)
   - [Não deu para ser desenvolvido](#não-deu-para-ser-desenvolvido)
