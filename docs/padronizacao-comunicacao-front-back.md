@@ -101,7 +101,6 @@ REQUEST:
 		email:'',
 		password:'',
 		description:'',
-		contact:'',
 		level:'',//
 		knowledges: [
 			{ name: 'nodejs', score: 5 },
@@ -155,7 +154,6 @@ REQUEST:
 		email:'',
 		password:'',
 		description:'',
-		contact:'',
 		level:'',
 	}
 }

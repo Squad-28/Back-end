@@ -45,3 +45,5 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: 'squad-28-technical-share'
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        env:
+          URL_API_PROD: https://squad-28-technical-share.herokuapp.com/
