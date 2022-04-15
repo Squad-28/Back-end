@@ -5,7 +5,7 @@ import swaggerUI from 'swagger-ui-express';
 import swaggerDocument from '../../swagger.json';
 import 'dotenv/config';
 
-const NODE_ENV = process.env === 'production';
+const NODE_ENV = process.env.NODE_ENV === 'production';
 const URL_API = NODE_ENV
   ? process.env.URL_API_PROD
   : `${process.env.URL_API_DEV}:${process.env.PORT}`;
