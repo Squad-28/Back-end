@@ -12,6 +12,8 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 
 [Link para o backend em produção](https://squad-28-technical-share.herokuapp.com/api-docs)
 
+[Link para o frontend em produção](https://squad28.vercel.app/)
+
 [Repositório do backend](https://github.com/Squad-28/back-end)
 
 [Repositório do frontend](https://github.com/Squad-28/front-end)
