@@ -148,7 +148,7 @@ class CreateUserService {
         id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledge.id,
-        score: knowledge.score,
+        score: knowledge?.score,
       });
 
       toInsertInKnowledgeTable.push({
@@ -192,7 +192,7 @@ class CreateUserService {
         id: uuidv4(),
         id_user: user.id,
         id_knowledge: knowledgeFound.id,
-        score: oldKnowledge.score,
+        score: oldKnowledge?.score,
       };
     });
 
