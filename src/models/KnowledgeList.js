@@ -34,7 +34,8 @@ class KnowledgeList extends Model {
         },
         score: {
           type: scoreType,
-          allowNull: false,
+          allowNull: true,
+          defaultValue: 1,
         },
       },
       {
