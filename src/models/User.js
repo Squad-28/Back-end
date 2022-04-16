@@ -20,11 +20,10 @@ class User extends Model {
         password: {
           type: DataTypes.STRING(255),
           allowNull: false,
-          unique: true,
         },
         level: {
           type: DataTypes.STRING(30),
-          allowNull: false,
+          allowNull: true,
         },
         description: {
           type: DataTypes.TEXT,
