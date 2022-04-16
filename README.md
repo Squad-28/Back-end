@@ -35,7 +35,7 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 - Rota `POST /users` para cadastrar um usuário.
 - Rota `/api-docs` para visualizar a documentação com Swagger.
 
-### Não deu para ser desenvolvido
+### Implementações futuras
 
 - Login com JWT.
 - Validação dos dados recebidos.
@@ -45,7 +45,7 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 - [Sobre o projeto](#sobre-o-projeto)
 - [Funcionalidades](#funcionalidades)
   - [Desenvolvido](#desenvolvido)
-  - [Não deu para ser desenvolvido](#não-deu-para-ser-desenvolvido)
+  - [Implementações futuras](#implementações-futuras)
 - [Como usar localmente](#como-usar-localmente)
   - [Rodando o projeto sem Docker](#rodando-o-projeto-sem-docker)
   - [Rodando o projeto com Docker](#rodando-o-projeto-com-docker)
