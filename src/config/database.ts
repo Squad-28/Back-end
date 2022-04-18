@@ -1,4 +1,4 @@
-require('dotenv/config');
+import 'dotenv/config';
 
 const developmentConfig = () => ({
   dialect: process.env.DB_DIALECT,
@@ -9,8 +9,8 @@ const developmentConfig = () => ({
   define: {
     timestamp: true,
     underscored: true,
-    underscoredAll: true,
-  },
+    underscoredAll: true
+  }
 });
 
 const testConfig = 'sqlite::memory:';
@@ -28,4 +28,4 @@ if (NODE_ENV === 'production') {
   config = developmentConfig();
 }
 
-module.exports = config;
+export default config;

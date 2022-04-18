@@ -9,10 +9,13 @@ import KnowledgeListRepository from '../repositories/KnowledgeList.repository';
 import IndexUserService from '../services/users/IndexUser.service';
 import FindByIdUserService from '../services/users/FindByIdUser.service';
 import CreateUserService from '../services/users/CreateUser.service';
+import userFactory from '../utils/userFactory';
 
 class UserController {
   async create(req, res) {
     const { user } = req.body;
+
+    return res.status(201).json({ user: userFactory(6, 3)[0] });
 
     try {
       const sequelize = new Database().getConnection();
