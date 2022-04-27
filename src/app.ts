@@ -1,32 +1,34 @@
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
-import routes from './routes';
+import Routes from './routes';
 
 class App {
-  #server;
+  private static expressInstance: Express;
 
-  constructor(database) {
-    this.#startDatabase(database);
-    this.#server = express();
-    this.#middlewares();
-    this.#routes();
+  private constructor() {}
+
+  private static setInstance(): void {
+    App.expressInstance = express();
+    this.middlewares();
+    this.routes();
   }
 
-  #middlewares() {
-    this.#server.use(express.json());
-    this.#server.use(cors());
+  private static middlewares(): void {
+    App.expressInstance.use(express.json());
+    App.expressInstance.use(cors());
   }
 
-  #routes() {
-    this.#server.use(routes);
+  private static routes(): void {
+    const routes = Routes.getRoutes();
+    App.expressInstance.use(routes.swaggerRoutes, routes.userRoutes);
+    App.expressInstance.use(routes.errorMiddleware);
   }
 
-  getServer() {
-    return this.#server;
-  }
-
-  async #startDatabase(database) {
-    await database.start();
+  public static getInstance(): Express {
+    if (!App.expressInstance) {
+      this.setInstance();
+    }
+    return App.expressInstance;
   }
 }
 
