@@ -1,54 +1,40 @@
-import { Sequelize } from 'sequelize';
-
 import config from '../config/database';
 
-import User from '../models/User';
-import Knowledge from '../models/Knowledge';
-import KnowledgeList from '../models/KnowledgeList';
+import { DataSource } from 'typeorm';
 
-class Database {
-  #sequelize;
-  #models;
+export class DatabaseSingleton {
+  private static dataSource: DataSource;
 
-  constructor() {
-    this.#sequelize = new Sequelize(config);
-    this.#models = [KnowledgeList, User, Knowledge];
+  private constructor() {}
+
+  public static async getDataSourceInstance(): Promise<DataSource> {
+    if (!DatabaseSingleton?.dataSource?.isInitialized) {
+      return await DatabaseSingleton.connect();
+    }
+    return DatabaseSingleton.dataSource;
   }
 
-  async start() {
-    this.#initModels();
-    await this.#authenticate();
-    return this.#sequelize;
+  public static async close(): Promise<void> {
+    await DatabaseSingleton.dataSource.destroy();
   }
 
-  async close() {
-    await this.#sequelize.close();
-  }
+  public static async connect(): Promise<DataSource> {
+    if (DatabaseSingleton.dataSource?.isInitialized) {
+      return DatabaseSingleton.dataSource;
+    }
 
-  async #authenticate() {
+    const dataSourceCreated = new DataSource(config);
+
     try {
-      await this.#sequelize.sync();
-      await this.#sequelize.authenticate();
+      DatabaseSingleton.dataSource = await dataSourceCreated.initialize();
 
       console.log('📦 Connection has been established successfully.');
+
+      return DatabaseSingleton.dataSource;
     } catch (error) {
       console.error('❌ Unable to connect to the database:', error);
 
       throw error;
     }
   }
-
-  #initModels() {
-    this.#models.forEach((model) => model.init(this.#sequelize));
-  }
-
-  getConnection() {
-    return this.#sequelize;
-  }
-
-  getModels() {
-    return this.#models;
-  }
 }
-
-export default Database;
