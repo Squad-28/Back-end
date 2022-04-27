@@ -6,7 +6,7 @@ import { Skill } from '../entities/Skill';
 import { SkillList } from '../entities/SkillList';
 
 const entities: any[] = [User, Skill, SkillList];
-const logging: LoggerOptions = ['log', 'error'];
+const logging: LoggerOptions = ['log', 'error', 'schema', 'warn'];
 
 const developmentConfig: DataSourceOptions = {
   type: process.env.DB_DIALECT as any,

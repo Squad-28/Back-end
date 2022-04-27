@@ -29,6 +29,7 @@ export class DatabaseSingleton {
 
     try {
       DatabaseSingleton.dataSource = await dataSourceCreated.initialize();
+      await DatabaseSingleton.dataSource.synchronize();
 
       console.log('📦 Connection has been established successfully.');
       return DatabaseSingleton.dataSource;
