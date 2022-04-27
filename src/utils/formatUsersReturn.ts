@@ -8,7 +8,14 @@ export default function formatUsersReturn(users: User[]): TypeUser[] {
     delete user.updatedAt;
     delete user.password;
 
-    if (user?.skillList?.length <= 0) return user;
+    if (!user.description) {
+      delete user.description;
+    }
+
+    if (user?.skillList?.length <= 0) {
+      delete user.skillList;
+      return user;
+    }
 
     skills = user.skillList.map((skillList) => ({
       name: skillList.skill.name,
