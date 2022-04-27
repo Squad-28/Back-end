@@ -7,11 +7,11 @@ import { Server as ServerHttps } from 'https';
 import { Server as ServerHttp } from 'http';
 
 let server: ServerHttps | ServerHttp;
+const PORT = parseInt(process.env.PORT) || 3333;
+const NODE_ENV = process.env.NODE_ENV;
+const NGROK = Boolean(process.env.NGROK);
 
 async function initServer(): Promise<void> {
-  const PORT = process.env.PORT || 3333;
-  const NODE_ENV = process.env.NODE_ENV;
-
   const app = App.getInstance();
 
   server = app.listen(PORT, () => {
@@ -21,9 +21,22 @@ async function initServer(): Promise<void> {
   });
 }
 
+async function initNgrok(): Promise<void> {
+  if (NGROK !== true) return;
+
+  const ngrok = require('ngrok');
+
+  const url = await ngrok.connect({
+    proto: 'http',
+    addr: PORT
+  });
+  console.log(url);
+}
+
 DatabaseSingleton.connect()
   .then(async () => {
     await initServer();
+    await initNgrok();
   })
   .catch((error) => {
     console.error(error);
