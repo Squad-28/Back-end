@@ -25,6 +25,8 @@
                   "properties": {
                     "users": {
                       "type": "array",
+                      "minItems": 0,
+                      "nullable": true,
                       "items": {
                         "type": "object",
                         "$ref": "#/components/schemas/User"
