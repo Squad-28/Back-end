@@ -10,6 +10,9 @@ import { TypeUser } from '../../../types/TypeUser';
 import CreateService from '../../../services/users/CreateService';
 import { populateTheDatabase } from '../../populateTheDatabase';
 import FindAllService from '../../../services/users/FindAllService';
+import { Skill } from '../../../entities/Skill';
+import { SkillList } from '../../../entities/SkillList';
+import FindByIdService from '../../../services/users/FindByIdService';
 
 describe('User routes', () => {
   let app: Express;
@@ -227,6 +230,115 @@ describe('User routes', () => {
 
       expect(joiAssert).not.toThrow();
       expect(response.statusCode).toEqual(400);
+    });
+  });
+
+  describe('GET /users/:id', () => {
+    async function insertInDatabase() {
+      const mockUser = fakeUser(1, 2)[0];
+      const skills = mockUser.skills;
+
+      const user = new User().setAttributes(mockUser);
+
+      const skill1 = new Skill().setAttributes(skills[0]);
+      const skill2 = new Skill().setAttributes(skills[1]);
+
+      const skillList1 = new SkillList().setAttributes(
+        user,
+        skill1,
+        skills[0].score
+      );
+      const skillList2 = new SkillList().setAttributes(
+        user,
+        skill2,
+        skills[1].score
+      );
+
+      const dataSource = await DatabaseSingleton.getDataSourceInstance();
+
+      const { id } = await dataSource.getRepository(User).save(user);
+      await dataSource.getRepository(Skill).save([skill1, skill2]);
+      await dataSource.getRepository(SkillList).save([skillList1, skillList2]);
+
+      return id;
+    }
+
+    test('Deve retornar o usuario cadastrados e status 200', async () => {
+      const id = await insertInDatabase();
+
+      const response = await request(app).get(`/users/${id}`);
+
+      const userSchema = Joi.object({
+        user: Joi.object({
+          id: Joi.string().uuid().required(),
+          name: Joi.string().max(100).required(),
+          email: Joi.string().email().max(100).required(),
+          description: Joi.string(),
+          level: Joi.string()
+            .equal(
+              UserLevel.TREINEE,
+              UserLevel.JUNIOR,
+              UserLevel.PLENO,
+              UserLevel.SENIOR
+            )
+            .required(),
+          skills: Joi.array()
+            .items(
+              Joi.object({
+                name: Joi.string().max(100).case('upper'),
+                score: Joi.number().min(1).max(5)
+              }).required()
+            )
+            .max(5)
+        }).required()
+      });
+
+      const userResponse: { user: TypeUser } = response.body;
+
+      const joiAssert = () => Joi.assert(userResponse, userSchema);
+
+      expect(joiAssert).not.toThrow();
+      expect(response.statusCode).toEqual(200);
+    });
+
+    test('Deve retornar erro 500', async () => {
+      const id = 'ed3c414ece2dcb';
+
+      jest
+        .spyOn(FindByIdService.prototype, 'findById')
+        .mockImplementation(() => {
+          throw new Error('master error');
+        });
+
+      const response = await request(app).get(`/users/${id}`);
+
+      const schema = Joi.object({});
+
+      const joiAssert = () => Joi.assert(response.body, schema);
+
+      expect(joiAssert).not.toThrow();
+      expect(response.statusCode).toEqual(500);
+    });
+
+    test('Deve retornar erro 404 usuario inexistente', async () => {
+      const id = 'ed3c414ece2dcb';
+
+      const response = await request(app).get(`/users/${id}`);
+
+      const schema = Joi.object({
+        errors: Joi.array()
+          .items(
+            Joi.object({
+              user: Joi.string().required()
+            })
+          )
+          .required()
+      }).required();
+
+      const joiAssert = () => Joi.assert(response.body, schema);
+
+      expect(joiAssert).not.toThrow();
+      expect(response.statusCode).toEqual(404);
     });
   });
 });
