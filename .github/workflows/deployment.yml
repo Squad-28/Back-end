@@ -1,4 +1,4 @@
-name: Complete pipeline
+name: Continuous integration and continuous deployment
 
 on:
   push:
@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        mysql-version: [8.0]
     steps:
       - uses: actions/checkout@v2
 
@@ -24,14 +23,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Rename .env.example
         run: cp .env.example .env
 
       - name: Run all test
-        run: yarn test
-
+        run: npm run test:ci
   CD:
     needs: [CI]
     runs-on: ubuntu-latest
