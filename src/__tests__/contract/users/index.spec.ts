@@ -1,4 +1,4 @@
-import request, { Request as RequestType } from 'supertest';
+import request from 'supertest';
 import { expect, test, describe } from '@jest/globals';
 import { Express } from 'express';
 import App from '../../../app';
@@ -8,13 +8,13 @@ import Joi from 'joi';
 import { User, UserLevel } from '../../../entities/User';
 import { TypeUser } from '../../../types/TypeUser';
 import CreateService from '../../../services/users/CreateService';
-import { populateTheDatabase } from '../../populateTheDatabase';
+import { insertUserIntoDatabase } from '../../populateTheDatabase';
 import FindAllService from '../../../services/users/FindAllService';
 import { Skill } from '../../../entities/Skill';
 import { SkillList } from '../../../entities/SkillList';
 import FindByIdService from '../../../services/users/FindByIdService';
 
-describe('User routes', () => {
+describe('Contrato rota de user', () => {
   let app: Express;
 
   beforeAll(async () => {
@@ -30,34 +30,75 @@ describe('User routes', () => {
   });
 
   describe('GET /users', () => {
-    test('Deve retornar array com usuarios cadastrados e status 200', async () => {
-      await populateTheDatabase();
+    test('Deve retornar array com 20 usuarios cadastrados e status 200', async () => {
+      await insertUserIntoDatabase(30);
 
       const response = await request(app).get('/users');
 
       const userSchema = Joi.object({
-        users: Joi.array().items(
-          Joi.object({
-            id: Joi.string().uuid().required(),
-            name: Joi.string().max(100).required(),
-            email: Joi.string().email().max(100).required(),
-            description: Joi.string(),
-            level: Joi.string().equal(
-              UserLevel.TREINEE,
-              UserLevel.JUNIOR,
-              UserLevel.PLENO,
-              UserLevel.SENIOR
-            ),
-            skills: Joi.array()
-              .items(
-                Joi.object({
-                  name: Joi.string().max(100).case('upper'),
-                  score: Joi.number().min(1).max(5)
-                })
-              )
-              .max(5)
-          })
-        )
+        users: Joi.array()
+          .items(
+            Joi.object({
+              id: Joi.string().uuid().required(),
+              name: Joi.string().max(100).required(),
+              email: Joi.string().email().max(100).required(),
+              description: Joi.string(),
+              level: Joi.string().equal(
+                UserLevel.TREINEE,
+                UserLevel.JUNIOR,
+                UserLevel.PLENO,
+                UserLevel.SENIOR
+              ),
+              skills: Joi.array()
+                .items(
+                  Joi.object({
+                    name: Joi.string().max(100).case('upper'),
+                    score: Joi.number().min(1).max(5)
+                  })
+                )
+                .max(5)
+            })
+          )
+          .length(20)
+      });
+
+      const usersResponse: { user: TypeUser } = response.body;
+
+      const joiAssert = () => Joi.assert(usersResponse, userSchema);
+
+      expect(joiAssert).not.toThrow();
+      expect(response.statusCode).toEqual(200);
+    });
+
+    test('Deve passar limit e offset corretamente e retornar 2 usuarios', async () => {
+      await insertUserIntoDatabase(6);
+      const response = await request(app).get('/users?limit=2&offset=2');
+
+      const userSchema = Joi.object({
+        users: Joi.array()
+          .items(
+            Joi.object({
+              id: Joi.string().uuid().required(),
+              name: Joi.string().max(100).required(),
+              email: Joi.string().email().max(100).required(),
+              description: Joi.string(),
+              level: Joi.string().equal(
+                UserLevel.TREINEE,
+                UserLevel.JUNIOR,
+                UserLevel.PLENO,
+                UserLevel.SENIOR
+              ),
+              skills: Joi.array()
+                .items(
+                  Joi.object({
+                    name: Joi.string().max(100).case('upper'),
+                    score: Joi.number().min(1).max(5)
+                  })
+                )
+                .max(5)
+            })
+          )
+          .length(2)
       });
 
       const usersResponse: { user: TypeUser } = response.body;
