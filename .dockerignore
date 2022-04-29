@@ -1,6 +1,6 @@
 .git
-old-*
-node_modules
-docs
 dist
-teste-*
+node_modules
+coverage
+docs
+.env

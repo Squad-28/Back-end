@@ -1,0 +1,265 @@
+{
+  "openapi": "3.0.n",
+  "info": {
+    "title": "Documentação do Technical Share",
+    "description": "Programa de Formação Season 3 da FCamara",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Squad 28 da Season 3",
+      "url": "https://github.com/Squad-28/back-end"
+    }
+  },
+  "basePath": "/",
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Busca todos os usuários.",
+        "operationId": "indexUser",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuários foram buscados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "minItems": 0,
+                      "maxItems": 100,
+                      "items": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor."
+          }
+        }
+      },
+      "post": {
+        "summary": "Cadastra um novo usuário.",
+        "operationId": "createUser",
+        "requestBody": {
+          "required": true,
+          "description": "Campos do usuário para ser cadastrado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User",
+                    "require": ["name", "email", "password"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário cadastrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email já existe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "example": "Email já existe."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor."
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Busca um usuário pelo id.",
+        "operationId": "findByIdUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "010027a3-1222-4871-9b29-2d058ec37dad"
+            },
+            "required": true,
+            "description": "O parametro será usado para buscar o usuário."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário foi buscado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user": {
+                            "type": "string",
+                            "example": "Usuário não encontrado."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true,
+            "example": "010027a3-1222-4871-9b29-2d058ec37dad"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Arthur Albuquerque"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 3,
+            "maxLength": 100,
+            "example": "Arthur_Albuquerque4@yahoo.com"
+          },
+          "password": {
+            "type": "string",
+            "writeOnly": true,
+            "format": "password",
+            "minLength": 3,
+            "maxLength": 255,
+            "example": "23nh4 gr4nd3 3 f0rt3"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 100,
+            "example": "Qualquer coisa"
+          },
+          "level": {
+            "type": "string",
+            "example": "Pleno",
+            "default": "Treinee",
+            "enum": ["Treinee", "Junior", "Pleno", "Sênior"]
+          },
+          "knowledges": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 5,
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "SQL"
+                },
+                "score": {
+                  "type": "integer",
+                  "format": "int32",
+                  "description": "Nível do conhecimento do usuário.",
+                  "minimum": 1,
+                  "maximum": 5,
+                  "example": 3
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

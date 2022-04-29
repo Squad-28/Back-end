@@ -92,11 +92,11 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 
 [Ir para o sumário](#sumario)
 
-- Node.js, MySQL, Express e Sequelize.
+- Node.js, Typescript, Typeorm e MySQL.
 - Docker e Docker Compose para teste local.
 - Pipeline CI/CD com GitHub Actions para testar e fazer deploy no Heroku.
 - Hospedagem no Heroku e provisionamento do banco de dados MySQL com ClearDB.
-- Testes automatizados com Jest e SQLite.
+- Testes automatizados com Jest, Supertest e SQLite.
 - Documentação da API Rest com Swagger.
 - Pretty e Editorconfig para padronizar código.
 
