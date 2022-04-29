@@ -23,7 +23,7 @@ const testConfig: DataSourceOptions = {
   database: ':memory:',
   synchronize: true,
   entities,
-  logging
+  logging: [...logging]
 };
 
 const productionConfig: DataSourceOptions = {
