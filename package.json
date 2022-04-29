@@ -14,7 +14,7 @@
     "test:ci": "npm run test -- --coverage --silent --verbose",
     "test:watch": "npm run test -- --watch",
     "prebuild": "npx rimraf ./dist",
-    "build": "npx babel ./src --out-dir ./dist --no-copy-ignored --extensions \".ts,.tsx\" --verbose --source-maps inline --copy-files",
+    "build": "npx babel ./src --out-dir ./dist --no-copy-ignored --extensions \".ts,.tsx\" --verbose --source-maps inline --copy-files && mv .env.example .env",
     "heroku-cleanup": "rm -rf ./src ./docs",
     "start": "npx pm2 start ecosystem.config.js",
     "start:node": "node ./dist/server.js",
