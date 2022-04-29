@@ -26,26 +26,12 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 
 [Wireframes de Alta Fidelidade](https://www.figma.com/file/4oqadBJ4b4SAcZEqFVsGqH/Squad-28---Arquivo-principal?node-id=557%3A4359)
 
-## Funcionalidades
-
-### Desenvolvido
-
-- Rota `GET /users` para buscar todos os usuários cadastrados.
-- Rota `GET /users/:id` para buscar um usuário cadastrado pelo id.
-- Rota `POST /users` para cadastrar um usuário.
-- Rota `/api-docs` para visualizar a documentação com Swagger.
-
-### Não deu para ser desenvolvido
-
-- Login com JWT.
-- Validação dos dados recebidos.
-
 ## Sumario
 
 - [Sobre a API](#sobre-a-api)
 - [Funcionalidades](#funcionalidades)
   - [Desenvolvido](#desenvolvido)
-  - [Não deu para ser desenvolvido](#não-deu-para-ser-desenvolvido)
+  - [Implementações futuras](#implementações-futuras)
 - [Como usar localmente](#como-usar-localmente)
   - [Rodando o projeto sem Docker](#rodando-o-projeto-sem-docker)
   - [Rodando o projeto com Docker](#rodando-o-projeto-com-docker)
@@ -59,6 +45,20 @@ O projeto foi desenvolvido em 15 dias no Hackathon da FCamara.
 - [Time](#time)
   - [Fullstack](#fullstack)
   - [UX](#ux)
+
+## Funcionalidades
+
+### Desenvolvido
+
+- Rota `GET /users` para buscar todos os usuários cadastrados.
+- Rota `GET /users/:id` para buscar um usuário cadastrado pelo id.
+- Rota `POST /users` para cadastrar um usuário.
+- Rota `/api-docs` para visualizar a documentação com Swagger.
+
+### Implementações futuras
+
+- Login com JWT.
+- Validação dos dados recebidos.
 
 ## Como usar localmente
 
