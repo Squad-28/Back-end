@@ -12,7 +12,11 @@ export default function formatUsersReturn(users: User[]): TypeUser[] {
       delete user.description;
     }
 
-    if (user?.skillList?.length <= 0) {
+    const fieldExist = !!user?.skillList;
+    if (!fieldExist) return user;
+
+    const fieldIsEmpty = user?.skillList?.length <= 0;
+    if (fieldIsEmpty) {
       delete user.skillList;
       return user;
     }
