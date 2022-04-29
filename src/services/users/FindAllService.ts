@@ -10,10 +10,14 @@ class FindAllService {
     offset = parseInt(offset);
 
     const anyFieldIsNaN = isNaN(limit) || isNaN(offset);
-    if (anyFieldIsNaN) {
+    const limitIsZeroOrNegative = limit <= 0;
+    const offsetIsNegative = offset < 0;
+    if (anyFieldIsNaN || limitIsZeroOrNegative || offsetIsNegative) {
       limit = 20;
       offset = 0;
     }
+
+    if (limit > 100) limit = 20;
 
     try {
       const users = await this.userRepository.findAll(limit, offset);
@@ -25,28 +29,5 @@ class FindAllService {
     }
   }
 }
-
-/*
--- usuarios com paginacao
-
-SELECT u.name, u.email, u.level, s.name as skill_name, sl.score 
-FROM skill_list sl
-JOIN users u ON u.id = sl.userId
-JOIN skills s ON s.id = sl.skillId
-ORDER BY u.name
-LIMIT 20 OFFSET 0;
-
--- os usuarios que tem a skill 'aws' ordenado por nome
-
-SELECT u.name, u.email, u.level, s.name as skill_name, sl.score 
-FROM skill_list sl
-JOIN users u ON u.id = sl.userId
-JOIN skills s ON s.id = sl.skillId
-WHERE s.name = 'aws'
-ORDER BY u.name;
-
-depois retorna cada usuario e todos os seus skill
-
-*/
 
 export default FindAllService;
