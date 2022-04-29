@@ -44,6 +44,7 @@
                     "users": {
                       "type": "array",
                       "minItems": 0,
+                      "maxItems": 100,
                       "items": {
                         "type": "object",
                         "$ref": "#/components/schemas/User"
@@ -82,7 +83,44 @@
         },
         "responses": {
           "201": {
-            "description": "Usuário cadastrado."
+            "description": "Usuário cadastrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email já existe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "example": "Email já existe."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Erro no servidor."
@@ -118,6 +156,30 @@
                     "user": {
                       "type": "object",
                       "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "user": {
+                            "type": "string",
+                            "example": "Usuário não encontrado."
+                          }
+                        }
+                      }
                     }
                   }
                 }
