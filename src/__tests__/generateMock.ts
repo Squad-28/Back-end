@@ -44,7 +44,7 @@ export function fakeSkill(amount: number): TypeSkill[] {
     randomNumber1to5 = Math.floor(Math.random() * 5) + 1;
     skills.push({
       id: uuidv4(),
-      name: faker.lorem.word(),
+      name: faker.lorem.words(3),
       score: randomNumber1to5
     });
   }

@@ -4,7 +4,33 @@ import { DatabaseSingleton } from '../database';
 import { Skill } from '../entities/Skill';
 import { SkillList } from '../entities/SkillList';
 import { User } from '../entities/User';
-import { fakeUser } from './generateMock';
+import { fakeUser, fakeSkill } from './generateMock';
+
+export async function insertUserIntoDatabase(amount = 5) {
+  const dataSource = await DatabaseSingleton.getDataSourceInstance();
+
+  const users = fakeUser(amount);
+  const userEntities = users.map((user) => {
+    return new User().setAttributes(user);
+  });
+
+  const userRepository = dataSource.getRepository(User);
+
+  await userRepository.save(userEntities);
+}
+
+export async function insertSkillIntoDatabase(amount = 5) {
+  const dataSource = await DatabaseSingleton.getDataSourceInstance();
+
+  const skills = fakeSkill(amount);
+  const skillEntities = skills.map((skill) => {
+    return new Skill().setAttributes(skill);
+  });
+
+  const skillRepository = dataSource.getRepository(Skill);
+
+  await skillRepository.save(skillEntities);
+}
 
 export async function populateTheDatabase() {
   const mockUsers = fakeUser(12, 4);
