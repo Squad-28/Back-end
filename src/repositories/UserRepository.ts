@@ -7,13 +7,15 @@ class UserRepository {
     return await DatabaseSingleton.getDataSourceInstance();
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(limit: number, offset: number): Promise<User[]> {
     const dataSource = await this.getDataSource();
     const userRepository = await dataSource.getRepository(User);
 
     try {
       return await userRepository.find({
-        relations: { skillList: { skill: true } }
+        relations: { skillList: { skill: true } },
+        take: limit,
+        skip: offset
       });
     } catch (error) {
       console.error('[ERRO NO BD, FIND ALL]: ' + error);
