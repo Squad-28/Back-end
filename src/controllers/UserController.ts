@@ -29,11 +29,11 @@ export async function create(
   res: Response,
   next: NextFunction
 ): Promise<Response> {
-  const newUser: TypeUser = req.body.user;
-
-  const createService = await getCreateService();
-
   try {
+    const newUser: TypeUser = req.body.user;
+
+    const createService = await getCreateService();
+
     const user = await createService.create(newUser);
 
     return res.status(201).json({ user });
@@ -68,10 +68,10 @@ export async function findById(
   res: Response,
   next: NextFunction
 ): Promise<Response> {
-  const { id } = req.params;
-  const findByIdService = await getFindByIdService();
-
   try {
+    const { id } = req.params;
+    const findByIdService = await getFindByIdService();
+
     const user = await findByIdService.findById(id);
 
     return res.status(200).json({ user });
