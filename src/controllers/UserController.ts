@@ -49,9 +49,12 @@ export async function findAll(
   res: Response,
   next: NextFunction
 ): Promise<Response> {
-  const findAllService = await getFindAllService();
   try {
-    const users = await findAllService.findAll();
+    const limit: any = req.query?.limit;
+    const offset: any = req.query?.offset;
+
+    const findAllService = await getFindAllService();
+    const users = await findAllService.findAll(limit, offset);
 
     return res.status(200).json({ users });
   } catch (error) {
